@@ -35,4 +35,4 @@ Once deployed on Vercel, you can benefit from [Speed Insights](https://vercel.co
 
 You will get data once your application will be re-deployed and will receive visitors.
 
-Test-Update frontend readme
+Test-Update frontend readme2
