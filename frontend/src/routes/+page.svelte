@@ -63,7 +63,7 @@
           <figure class="max-w-lg">
             <img class="h-auto max-w-full" src="/images/demo.png" alt="image descriptio2n">
             <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">
-              Analyse all the code quality metrics you need for your project here
+              Create notes, add reminders and much more
             </figcaption>
           </figure>
 
