@@ -10,10 +10,10 @@
     </span>
     <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-400 sm:mt-0">
         <li>
-            <a href="https://www.linkedin.com/in/manjushree2012/" class="hover:underline me-4 md:me-6">About me</a>
+            <a href="https://www.linkedin.com/in/manjushree2012/" target="_blank"  class="hover:underline me-4 md:me-6">About me</a>
         </li>
         <li>
-            <a href="https://github.com/manjushree2012/levonotes/releases" class="hover:underline me-4 md:me-6">Releases</a>
+            <a href="https://github.com/manjushree2012/levonotes/releases" target="_blank"  class="hover:underline me-4 md:me-6">Releases</a>
         </li>
         <li>
             <a href="https://github.com/manjushree2012/levonotes/issues/new" target="_blank" class="hover:underline me-4 md:me-6">Report a bug</a>
