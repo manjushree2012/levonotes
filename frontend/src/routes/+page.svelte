@@ -35,9 +35,9 @@
             </Dialog.Trigger>
             <Dialog.Content>
               <Dialog.Header>
-                <Dialog.Title>Do not use codepulse for your PRODUCTION application</Dialog.Title>
+                <Dialog.Title>Do not enter sensitive information in your notes.</Dialog.Title>
                 <Dialog.Description>
-                  Codepulse is just a side project created by me and is currently actively under developent. You can just see, play around but please do not use codepulse for your real production applications. 
+                  This is just a demo application created as a side project by me. Please, do not under any circumstances, enter any senitive information in your notes. The content is not encrypted.
                 </Dialog.Description>
               </Dialog.Header>
             </Dialog.Content>
