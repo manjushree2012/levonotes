@@ -18,16 +18,10 @@
 	<nav
 	  class="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
 	  <a href="/" class="flex items-center gap-2 text-lg font-semibold md:text-base">
-		  <img src="/images/header.png" alt="codePulse">
+		  <img src="/images/header.png" alt="levonotes">
 	  </a>
 	  <a href="/" class="text-foreground transition-colors hover:text-foreground">
 		Home
-	  </a>
-	  <a href="##" class="text-muted-foreground transition-colors hover:text-foreground">
-		Services
-	  </a>
-	  <a href="##" class="text-muted-foreground transition-colors hover:text-foreground">
-		Limitations
 	  </a>
 	  <a href="##" class="text-muted-foreground transition-colors hover:text-foreground">
 		About
