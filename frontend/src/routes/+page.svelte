@@ -67,13 +67,6 @@
             </figcaption>
           </figure>
 
-          <div class="mt-24">
-            <h1 class="scroll-m-20 text-4xl font-bold tracking-tight">Works with programming language of your choice</h1>
-            <div class="flex gap-8 md:gap-20 items-center justify-center mt-10 flex-wrap">
-              <img class="object-contain h-32 w-48" src="/images/python-logo.png" alt="Python">
-              <img class="object-contain h-32 w-48" src="/images/js-logo.png" alt="Javascript">
-            </div>
-          </div>
         </section>
     </main>
   </div>
