@@ -1,5 +1,5 @@
 <script>
-    import Tiptap from '$lib/Tiptap.svelte'
+    import Tiptap from '$lib/TipTap.svelte'
   </script>
   
   <main>
