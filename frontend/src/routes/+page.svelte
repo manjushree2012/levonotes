@@ -37,7 +37,7 @@
               <Dialog.Header>
                 <Dialog.Title>Do not enter sensitive information in your notes.</Dialog.Title>
                 <Dialog.Description>
-                  This is just a demo application created as a side project by me. Please, do not under any circumstances, enter any senitive information in your notes. The content is not encrypted.
+                  This is just a demo application created as a side project by me. Please, do not under any circumstances, enter any sensitive information in your notes. The content is not encrypted.
                 </Dialog.Description>
               </Dialog.Header>
             </Dialog.Content>
