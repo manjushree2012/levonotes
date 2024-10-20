@@ -28,7 +28,27 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt  # Ensure all your dependencies are listed here
+          pip install -r backend/requirements.txt
       
       - name: Run reminder checker
-        run: echo "My secret is this ${{ secrets.DB_USER }}"
+        env:
+          # MAIL_PORT: ${{ secrets.MAIL_PORT }}
+          # MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          # MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          # MAIL_USE_TLS: 'False'
+          # MAIL_USE_SSL: 'True'
+
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+
+          MAIL_SERVER: ${{ secrets.MAIL_SERVER }}
+          MAIL_PORT:  ${{ secrets.MAIL_PORT }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_USE_TLS: False
+          MAIL_USE_SSL: True
+
+        run: echo "My secret is this ${{ env.DB_USER }}"
