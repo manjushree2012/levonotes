@@ -3,14 +3,12 @@ name: Send Reminder Emails
 on:
   push:
     branches:
-      - setup-mailer
+      - master
 
   schedule:
-    # This cron syntax runs the workflow every 5 minutes.
-    - cron: '*/5 * * * *' 
+    - cron: '*/5 * * * *' #every 5 minutes
 
 jobs:
-  
   send_reminders:
     environment: secrets  # Specify the environment here
     
@@ -32,12 +30,6 @@ jobs:
       
       - name: Run reminder checker
         env:
-          # MAIL_PORT: ${{ secrets.MAIL_PORT }}
-          # MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
-          # MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
-          # MAIL_USE_TLS: 'False'
-          # MAIL_USE_SSL: 'True'
-
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_USER: ${{ secrets.DB_USER }}
