@@ -62,6 +62,14 @@ def create_note(data):
     )
     session.add(new_note)
     session.commit()
-    return new_note
+
+    note_dict = {
+        'id': new_note.id,
+        'title': new_note.title,
+        'content': new_note.content,
+        'created_on': new_note.created_on,
+        'updated_on': new_note.updated_on
+    }
+    return note_dict
 
 
