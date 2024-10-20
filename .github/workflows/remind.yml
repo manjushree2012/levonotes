@@ -10,7 +10,10 @@ on:
     - cron: '*/5 * * * *' 
 
 jobs:
+  
   send_reminders:
+    environment: secrets  # Specify the environment here
+    
     runs-on: ubuntu-latest
 
     steps:
