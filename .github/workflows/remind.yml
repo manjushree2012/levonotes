@@ -28,7 +28,4 @@ jobs:
           pip install -r backend/requirements.txt  # Ensure all your dependencies are listed here
       
       - name: Run reminder checker
-        run: |
-          export DB_USER=${{ secrets.DB_USER }}
-          echo $DB_USER
-# python backend/api/check_reminders.py
+        run: echo "My secret is this ${{ secrets.DB_USER }}"
