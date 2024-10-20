@@ -14,6 +14,8 @@ load_dotenv()
 mail = Mail()
 app = Flask(__name__)
 
+print('Hello')
+
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
 app.config['MAIL_PORT'] = os.getenv('MAIL_PORT')
 app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
