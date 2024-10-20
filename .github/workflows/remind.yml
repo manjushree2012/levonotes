@@ -51,4 +51,5 @@ jobs:
           MAIL_USE_TLS: False
           MAIL_USE_SSL: True
 
-        run: echo "My secret is this ${{ env.DB_USER }}"
+        run: |
+          python backend/api/check_reminders.py
