@@ -3,7 +3,7 @@ name: Send Reminder Emails
 on:
   push:
     branches:
-      - master
+      - setup-mailer
 
   schedule:
     # This cron syntax runs the workflow every 5 minutes.
