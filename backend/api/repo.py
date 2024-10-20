@@ -36,3 +36,12 @@ Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 session = Session()
+
+def get_due_reminders():
+    from datetime import datetime
+    now = datetime.now()
+
+    due_reminders = session.query(Reminder).filter(Reminder.reminder_time <= now).all()
+
+    return due_reminders
+
