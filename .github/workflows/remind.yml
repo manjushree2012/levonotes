@@ -29,4 +29,6 @@ jobs:
       
       - name: Run reminder checker
         run: |
+          export DB_USER=${{ secrets.DB_USER }}
+          echo $DB_USER
           python backend/api/check_reminders.py
