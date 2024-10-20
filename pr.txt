@@ -1,3 +1,4 @@
 shadcn-config
 dashboard-design
 notes-page-design
+setup-mailer
