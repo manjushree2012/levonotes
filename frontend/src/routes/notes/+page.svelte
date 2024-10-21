@@ -139,7 +139,7 @@
                                             <!-- ml-auto text-xs text-muted-foreground -->
                                              <!-- Add this class if selcted or smething for time wala class -->
                                             <div class="ml-auto text-xs text-foreground">
-                                                { item.updated_at }
+                                                { item.updated_at_readable }
                                             </div>
                                         </div>
                                     </div>
