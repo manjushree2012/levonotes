@@ -1,16 +1,25 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 	import { Editor } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 
 	let element;
 	let editor;
 
+	const dispatch = createEventDispatcher();
+
+	export let content;
+
+	 // Watch for changes in the content prop
+	 $: if (editor && content !== editor.getHTML()) {
+        editor.commands.setContent(content); // Update editor content when prop changes
+    }
+
 	onMount(() => {
 		editor = new Editor({
 			element: element,
 			extensions: [StarterKit],
-			content: '<p>Hello World! 🌍️ </p>',
+			content: content,
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
 				editor = editor;
@@ -18,9 +27,8 @@
 			onUpdate({editor}) {
 				const content = editor.getHTML()
 				
-				updateContent(content)
-
-				
+				// Dispatch the event with the updated content
+				dispatch('contentUpdated', { content });				
 			}
 		});
 	});
@@ -30,28 +38,6 @@
 			editor.destroy();
 		}
 	});
-
-	async function updateContent(content) {
-		const title = "Shopping List"
-		try {
-            const response = await fetch('http://127.0.0.1:5000/note', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ title, content })
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            console.log('Update successful:', data);
-        } catch (error) {
-            console.error('Error updating content:', error);
-        }
-	}
 </script>
 
 {#if editor}

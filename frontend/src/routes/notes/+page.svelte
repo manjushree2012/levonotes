@@ -6,13 +6,13 @@
     import { DateInput } from 'date-picker-svelte'
 
     let reminderDateTime = new Date()
-
-
-
-
     let mails = [];
     let loading = true;
     let error = null;
+
+    let saveTimeout;
+    let saveInterval = 5000; // Set to 5000 ms (5 seconds) or 10000 ms (10 seconds)
+    let currentContent = '';
 
     const selectedNoteId = writable(null)
 
@@ -30,19 +30,6 @@
         }
     });
 
-
-
-
-	import Search from "lucide-svelte/icons/search";
-	// import { primaryRoutes, secondaryRoutes } from "../config.js";
-	// import { mailStore } from "../store.js";
-	// import type { Account, Mail } from "../data.js";
-	// import AccountSwitcher from "./account-switcher.svelte";
-	// import MailDisplay from "./mail-display.svelte";
-	// import MailList from "./mail-list.svelte";
-	// import Nav from "./nav.svelte";
-	import { cn } from "$lib/utils.js";
-
     import * as Resizable from "$lib/components/ui/resizable";
     import { Separator } from "$lib/components/ui/separator";
     import * as Tabs from "$lib/components/ui/tabs";
@@ -59,7 +46,6 @@
 
 	export let defaultLayout = [265, 440, 655];
 	export let defaultCollapsed = false;
-	// export let navCollapsedSize: number;
 
 	let isCollapsed = defaultCollapsed;
 
@@ -91,6 +77,42 @@
 
     function selectMail(id) {
         selectedNoteId.set(id);
+    }
+
+    async function handleContentUpdate(event) {
+        currentContent = event.detail.content
+
+        // Clear the existing timeout if it exists
+        if (saveTimeout) {
+            clearTimeout(saveTimeout);
+        }
+
+         // Set a new timeout to save content after the defined interval
+         saveTimeout = setTimeout(() => {
+            saveContent();
+        }, saveInterval);
+    }
+
+    async function saveContent() {
+        const title = "Shopping List"
+		try {
+            const response = await fetch(`http://127.0.0.1:5000/note/${selectedNote.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, content: currentContent })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log('Update successful:', data);
+        } catch (error) {
+            console.error('Error updating content:', error);
+        }
     }
 
     // Reactive variable to get the selected note object
@@ -231,7 +253,7 @@
                         </div>
 
                         <div class="flex-1 overflow-y-auto whitespace-pre-wrap p-4 text-sm">
-                            <Tiptap />
+                            <Tiptap content={selectedNote.content} on:contentUpdated={handleContentUpdate} />
                         </div>
                         <Separator class="mt-auto" />
                     </div>
