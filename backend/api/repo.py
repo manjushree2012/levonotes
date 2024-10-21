@@ -72,4 +72,15 @@ def create_note(data):
     }
     return note_dict
 
-
+def delete_note(note_id):
+    try:
+        note = session.query(Note).filter(Note.id == note_id).first()
+        if note:
+            session.delete(note)
+            session.commit()
+            return True
+        else:
+            return False
+    except Exception as e:
+        session.rollback()
+        raise e
