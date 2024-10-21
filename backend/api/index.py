@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from .repo import create_note, delete_note, get_all_notes
+from .repo import create_note, delete_note, get_all_notes, update_note
 
 from marshmallow import Schema, fields, ValidationError
 
@@ -46,5 +46,19 @@ def list_notes():
     try:
         notes = get_all_notes()
         return jsonify(notes), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/note/<int:note_id>', methods=['PUT'])
+def update_notes(note_id):
+    try:
+        data = note_schema.load(request.get_json())
+        updated_note = update_note(note_id, data)
+        if updated_note:
+            return jsonify(updated_note), 200
+        else:
+            return jsonify({"error": f"Note with id {note_id} not found"}), 404
+    except ValidationError as err:
+        return jsonify(err.messages), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500

@@ -6,3 +6,4 @@ create-notes-api
 test-commit
 delete-note-api
 list-all-notes-api
+update-note-api

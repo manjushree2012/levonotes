@@ -100,3 +100,26 @@ def get_all_notes():
     except Exception as e:
         session.rollback()
         raise e
+
+
+def update_note(note_id, data):
+    try:
+        note = session.query(Note).filter(Note.id == note_id).first()
+        if note:
+            note.title = data['title']
+            note.content = data['content']
+            note.updated_on = datetime.utcnow()
+            session.commit()
+
+            return {
+                'id': note.id,
+                'title': note.title,
+                'content': note.content,
+                'created_on': note.created_on,
+                'updated_on': note.updated_on
+            }
+        else:
+            return None
+    except Exception as e:
+        session.rollback()
+        raise e
