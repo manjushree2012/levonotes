@@ -44,6 +44,8 @@
     import { Trash2 } from 'lucide-svelte';
     import { AlarmClock } from 'lucide-svelte';
 
+    import { NotebookPen } from 'lucide-svelte';
+
 
 
 
@@ -116,6 +118,11 @@
 			<Tabs.Root value="all">
 				<div class="flex items-center px-4 py-2">
 					<h1 class="text-xl font-bold">All notes</h1>
+                    <Button class="ml-auto">
+                        <!-- <EnvelopeOpen class="mr-2 h-4 w-4" /> -->
+                        <NotebookPen  class="mr-2 h-4 w-4" />
+                        Create New
+                      </Button>
 				</div>
                 
 				<Separator />
