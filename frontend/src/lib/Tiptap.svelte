@@ -1,10 +1,12 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, createEventDispatcher } from 'svelte';
 	import { Editor } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 
 	let element;
 	let editor;
+
+	const dispatch = createEventDispatcher();
 
 	export let content;
 
@@ -26,6 +28,9 @@
 				const content = editor.getHTML()
 				
 				updateContent(content)
+
+				dispatch('contentUpdated', { content }); // Dispatch the event with the updated content
+
 
 				
 			}

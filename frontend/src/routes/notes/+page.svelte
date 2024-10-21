@@ -93,6 +93,11 @@
         selectedNoteId.set(id);
     }
 
+    function handleContentUpdate(event) {
+        console.log('Content updated:', event.detail.content); // Access updated content
+        // You can also update the parent's state or perform other actions here
+    }
+
     // Reactive variable to get the selected note object
     $: selectedNote = mails.find(mail => mail.id === $selectedNoteId);
 
@@ -232,7 +237,7 @@
 
                         <div class="flex-1 overflow-y-auto whitespace-pre-wrap p-4 text-sm">
                             {selectedNote.content}
-                            <Tiptap content={selectedNote.content} />
+                            <Tiptap content={selectedNote.content} on:contentUpdated={handleContentUpdate} />
                         </div>
                         <Separator class="mt-auto" />
                     </div>
