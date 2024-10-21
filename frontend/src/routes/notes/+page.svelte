@@ -146,9 +146,11 @@
                                     <div class="text-muted-foreground line-clamp-2 text-xs">
                                         {item.content.substring(0, 300)}
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <Badge> Remind me:  {item.remind_at} </Badge>
-                                    </div>
+                                    {#if item.reminder}
+                                        <div class="flex items-center gap-2">
+                                            <Badge> Remind me:  {item.reminder.reminder_time_readable} </Badge>
+                                        </div>
+                                    {/if }
                                 </button>
                             {/each}
                         </div>
