@@ -151,3 +151,15 @@ def search_notes(query):
     # Use SQLAlchemy to filter notes based on the search query
     results = session.query(Note).filter(Note.content.ilike(f'%{query}%')).all()
     return [note.to_dict() for note in results]
+    
+def add_reminder(data):
+    new_reminder = Reminder(
+        email=data['email'],
+        message=data['message'],
+        reminder_time=data['reminder_time'],
+        note_id=data.get('note_id')  # This will be None if not provided
+    )
+    session.add(new_reminder)
+    session.commit()
+
+    return new_reminder.to_dict()
