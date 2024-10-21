@@ -84,3 +84,19 @@ def delete_note(note_id):
     except Exception as e:
         session.rollback()
         raise e
+
+def get_all_notes():
+    try:
+        notes = session.query(Note).all()
+        return [
+            {
+                'id': note.id,
+                'title': note.title,
+                'content': note.content,
+                'created_on': note.created_on,
+                'updated_on': note.updated_on
+            } for note in notes
+        ]
+    except Exception as e:
+        session.rollback()
+        raise e
