@@ -2,10 +2,15 @@
     import { onMount } from 'svelte';
     import Tiptap from '$lib/Tiptap.svelte'
 
+    import { writable } from 'svelte/store';
+
+
 
     let mails = [];
     let loading = true;
     let error = null;
+
+    const selectedNoteId = writable(null)
 
     onMount(async () => {
         try {
@@ -107,6 +112,13 @@
 		isCollapsed = false;
 		document.cookie = `PaneForge:collapsed=${false}`;
 	}
+
+    function selectMail(id) {
+        selectedNoteId.set(id);
+    }
+
+    // Reactive variable to get the selected note object
+    $: selectedNote = mails.find(mail => mail.id === $selectedNoteId);
 </script>
 
 <div class="hidden md:block">
@@ -137,7 +149,7 @@
                     <ScrollArea class="h-screen">
                         <div class="flex flex-col gap-2 p-4 pt-0">
                             {#each mails as item}
-                                <button class="hover:bg-accent flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all" on:click={() => mailStore.setMail(item.id)}>
+                                <button class="hover:bg-accent flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all" on:click={() => selectMail(item.id) }>
                                     <div class="flex w-full flex-col gap-1">
                                         <div class="flex items-center">
                                             <div class="flex items-center gap-2">
@@ -265,17 +277,19 @@
                     <Separator orientation="vertical" class="mx-2 h-6" />
                 </div>
                 <Separator />
-                {#if true}
+                {#if selectedNote}
                     <div class="flex h-full flex-1 flex-col overflow-hidden">
                         <div class="flex items-start p-4">
                             <div class="flex items-start gap-4 text-sm">
                                 <div class="grid gap-1">
                                     <!-- <div class="font-semibold">Alison Smith</div> -->
-                                    <h4 class="scroll-m-20 text-2xl font-semibold tracking-tight">The Joke Tax</h4>
+                                    <h4 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+                                        {selectedNote ? selectedNote.title : 'Select a note'} 
+                                    </h4>
                                 </div>
                             </div>
                             <div class="text-muted-foreground ml-auto text-xs">
-                                Oct 22, 2023, 9:00:00 AM
+                                Updated: { selectedNote.updated_at_readable }
                             </div>
                         </div>
 
