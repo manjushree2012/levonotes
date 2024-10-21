@@ -2,8 +2,14 @@
     import { onMount } from 'svelte';
     import Tiptap from '$lib/Tiptap.svelte'
 
+    import { Search } from 'lucide-svelte';
+
+
     import { writable } from 'svelte/store';
     import { DateInput } from 'date-picker-svelte'
+
+    import { Input } from "$lib/components/ui/input";
+
 
     let reminderDateTime = new Date()
     let mails = [];
@@ -15,6 +21,36 @@
     let currentContent = '';
 
     const selectedNoteId = writable(null)
+
+    let searchQuery = writable('');
+
+     // Reactive statement to call the search API when the search query changes
+     $: searchQueryValue = $searchQuery;
+        $: {
+            if (searchQueryValue) {
+                searchAPI(searchQueryValue);
+            }
+        }
+
+        // Function to call the search API
+    async function searchAPI(query) {
+        console.log('Search changed')
+        console.log(query)
+
+        
+        try {
+            const response = await fetch(` http://127.0.0.1:5000/notes/search?query=${query}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // const results = await response.json();
+            mails = await response.json()
+            // console.log('Search results:', results);
+            // Update your notes or display results as needed
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        }
+    }
 
     onMount(async () => {
         try {
@@ -167,6 +203,24 @@
 				</div>
                 
 				<Separator />
+
+                <div
+					class="bg-background/95 supports-[backdrop-filter]:bg-background/60 p-4 backdrop-blur"
+				>
+					<form>
+						<div class="relative">
+							<Search
+								class="text-muted-foreground absolute left-2 top-[50%] h-4 w-4 translate-y-[-50%]"
+							/>
+							<Input 
+                                placeholder="Search" 
+                                class="pl-8"
+                                bind:value={$searchQuery} 
+                                on:input={() => searchQuery.set($searchQuery)}
+                            />
+						</div>
+					</form>
+				</div>
 				
 				<Tabs.Content value="all" class="m-0">
                     <!-- Notes List Start -->

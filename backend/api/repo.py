@@ -146,3 +146,8 @@ def update_note(note_id, data):
     except Exception as e:
         session.rollback()
         raise e
+
+def search_notes(query):
+    # Use SQLAlchemy to filter notes based on the search query
+    results = session.query(Note).filter(Note.content.ilike(f'%{query}%')).all()
+    return [note.to_dict() for note in results]
