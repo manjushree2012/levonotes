@@ -1,5 +1,7 @@
 <script>
     import { onMount } from 'svelte';
+    import Tiptap from '$lib/Tiptap.svelte'
+
 
     let mails = [];
     let loading = true;
@@ -279,6 +281,7 @@
 
                         <div class="flex-1 overflow-y-auto whitespace-pre-wrap p-4 text-sm">
                             Some random text here
+                            <Tiptap />
                         </div>
                         <Separator class="mt-auto" />
                     </div>
