@@ -95,6 +95,35 @@
 
     // Reactive variable to get the selected note object
     $: selectedNote = mails.find(mail => mail.id === $selectedNoteId);
+
+    // Reactive statement to call the API when the date changes
+    $: {
+        updateDateAPI(reminderDateTime);
+    }
+
+    async function updateDateAPI(newDate) {
+        console.log('Reminder changed')
+
+        try {
+            const response = await fetch('http://your-api-endpoint.com/update-date', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ date: newDate }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update date');
+            }
+
+            const result = await response.json();
+            console.log('Date updated successfully:', result);
+        } catch (error) {
+            console.error('Error updating date:', error);
+        }
+
+    }
 </script>
 
 <div class="hidden md:block">
