@@ -1,4 +1,27 @@
 <script>
+    import { onMount } from 'svelte';
+
+    let mails = [];
+    let loading = true;
+    let error = null;
+
+    onMount(async () => {
+        try {
+        const response = await fetch('http://127.0.0.1:5000/notes');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        mails = await response.json();
+        } catch (e) {
+        error = e.message;
+        } finally {
+        loading = false;
+        }
+    });
+
+
+
+
 	import Search from "lucide-svelte/icons/search";
 	// import { primaryRoutes, secondaryRoutes } from "../config.js";
 	// import { mailStore } from "../store.js";
@@ -27,26 +50,26 @@
 	// export let accounts: Account[];
 	// export let mails: Mail[];
 
-    export const mails = [
-	{
-		id: "6c84fb90-12c4-11e1-840d-7b25c5ee775a",
-		title: "Shopping List",
-		email: "williamsmith@example.com",
-		content: "Hi, let's have a meeting tomorrow to discuss the project. I've been reviewing the project details and have some ideas I'd like to share. It's crucial that we align on our next steps to ensure the project's success.\n\nPlease come prepared with any questions or insights you may have. Looking forward to our meeting!\n\nBest regards, William",
-		created_at: "2023-10-22T09:00:00",
-        updated_at: "2023-10-22T09:00:00",
-        remind_at: "2023-10-22T10:30:00",
-	    },
-        {
-		id: "110e8400-e29b-11d4-a716-446655440000",
-		title: "Alice Smith",
-		email: "alicesmith@example.com",
-		content: "Thank you for the project update. It looks great! I've gone through the report, and the progress is impressive. The team has done a fantastic job, and I appreciate the hard work everyone has put in.\n\nI have a few minor suggestions that I'll include in the attached document.\n\nLet's discuss these during our next meeting. Keep up the excellent work!\n\nBest regards, Alice",
-		created_at: "2023-10-22T09:00:00",
-        updated_at: "2023-10-22T09:00:00",
-        remind_at: "2023-10-22T10:30:00",
-	}
-    ]
+    // export const mails = [
+	// {
+	// 	id: "6c84fb90-12c4-11e1-840d-7b25c5ee775a",
+	// 	title: "Shopping List",
+	// 	email: "williamsmith@example.com",
+	// 	content: "Hi, let's have a meeting tomorrow to discuss the project. I've been reviewing the project details and have some ideas I'd like to share. It's crucial that we align on our next steps to ensure the project's success.\n\nPlease come prepared with any questions or insights you may have. Looking forward to our meeting!\n\nBest regards, William",
+	// 	created_at: "2023-10-22T09:00:00",
+    //     updated_at: "2023-10-22T09:00:00",
+    //     remind_at: "2023-10-22T10:30:00",
+	//     },
+    //     {
+	// 	id: "110e8400-e29b-11d4-a716-446655440000",
+	// 	title: "Alice Smith",
+	// 	email: "alicesmith@example.com",
+	// 	content: "Thank you for the project update. It looks great! I've gone through the report, and the progress is impressive. The team has done a fantastic job, and I appreciate the hard work everyone has put in.\n\nI have a few minor suggestions that I'll include in the attached document.\n\nLet's discuss these during our next meeting. Keep up the excellent work!\n\nBest regards, Alice",
+	// 	created_at: "2023-10-22T09:00:00",
+    //     updated_at: "2023-10-22T09:00:00",
+    //     remind_at: "2023-10-22T10:30:00",
+	// }
+    // ]
 
 
 	export let defaultLayout = [265, 440, 655];
@@ -116,16 +139,18 @@
                                             <!-- ml-auto text-xs text-muted-foreground -->
                                              <!-- Add this class if selcted or smething for time wala class -->
                                             <div class="ml-auto text-xs text-foreground">
-                                                { item.updated_at }
+                                                { item.updated_at_readable }
                                             </div>
                                         </div>
                                     </div>
                                     <div class="text-muted-foreground line-clamp-2 text-xs">
                                         {item.content.substring(0, 300)}
                                     </div>
-                                    <div class="flex items-center gap-2">
-                                        <Badge> Remind me:  {item.remind_at} </Badge>
-                                    </div>
+                                    {#if item.reminder}
+                                        <div class="flex items-center gap-2">
+                                            <Badge> Remind me:  {item.reminder.reminder_time_readable} </Badge>
+                                        </div>
+                                    {/if }
                                 </button>
                             {/each}
                         </div>
