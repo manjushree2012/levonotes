@@ -151,6 +151,31 @@
         }
     }
 
+    async function deleteNote(selectedNote) {
+        console.log(selectedNote)
+
+        if ($selectedNoteId) {
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/note/${$selectedNoteId}`, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                console.log('Delete successful:', data);
+
+                // Optionally, you can remove the deleted note from the mails array
+                mails = mails.filter(mail => mail.id !== $selectedNoteId);
+                selectedNoteId.set(null); // Clear the selected note
+            } catch (error) {
+                console.error('Error deleting note:', error);
+            }
+        }
+    }
+
     // Reactive variable to get the selected note object
     $: selectedNote = mails.find(mail => mail.id === $selectedNoteId);
 
@@ -268,16 +293,12 @@
                 {#if selectedNote}
                     <div class="mb-1 flex items-center p-2">
                         <div class="flex items-center gap-2">
-                            <Tooltip.Root openDelay={0} group>
-                                <Tooltip.Trigger
-                                    id="move_to_trash_tooltip"
-                                    class={buttonVariants({ variant: "ghost", size: "icon" })}>
-                                    <Trash2 />
-                                    <span class="sr-only">Move to trash</span>
-                                </Tooltip.Trigger>
-                                <Tooltip.Content>Move to trash</Tooltip.Content>
-                            </Tooltip.Root>
-
+                                <Button 
+                                    class="ml-auto"  
+                                    on:click={deleteNote}>
+                                        <Trash2 class="mr-2 h-4 w-4"/>
+                                        Delete
+                                </Button>
                             <DateInput 
                                 bind:value={reminderDateTime}
                                 timePrecision="minute"                            
