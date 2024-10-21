@@ -5,7 +5,7 @@
     import { writable } from 'svelte/store';
     import { DateInput } from 'date-picker-svelte'
 
-    let date = new Date()
+    let reminderDateTime = new Date()
 
 
 
@@ -174,7 +174,7 @@
                             </Tooltip.Root>
 
                             <DateInput 
-                                bind:value={date}
+                                bind:value={reminderDateTime}
                                 timePrecision="minute"                            
                             />
                             <Separator orientation="vertical" class="mx-1 h-6" />
