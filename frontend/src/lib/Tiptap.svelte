@@ -27,7 +27,7 @@
 			onUpdate({editor}) {
 				const content = editor.getHTML()
 				
-				updateContent(content)
+				// updateContent(content)
 
 				dispatch('contentUpdated', { content }); // Dispatch the event with the updated content
 

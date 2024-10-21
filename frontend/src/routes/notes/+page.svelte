@@ -75,9 +75,30 @@
         selectedNoteId.set(id);
     }
 
-    function handleContentUpdate(event) {
+    async function handleContentUpdate(event) {
         console.log('Content updated:', event.detail.content); // Access updated content
         // You can also update the parent's state or perform other actions here
+        console.log(selectedNote.id)
+        const content = event.detail.content
+        const title = "Shopping List"
+		try {
+            const response = await fetch(`http://127.0.0.1:5000/note/${selectedNote.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, content })
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            console.log('Update successful:', data);
+        } catch (error) {
+            console.error('Error updating content:', error);
+        }
     }
 
     // Reactive variable to get the selected note object
