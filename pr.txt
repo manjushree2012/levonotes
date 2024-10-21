@@ -8,3 +8,4 @@ delete-note-api
 list-all-notes-api
 update-note-api
 list-notes-in-UI
+create-new-note
