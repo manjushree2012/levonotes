@@ -1,9 +1,13 @@
 from flask import Flask, request, jsonify
 from .repo import create_note, delete_note, get_all_notes, update_note
+from flask_cors import CORS
 
 from marshmallow import Schema, fields, ValidationError
 
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app)
 
 @app.route('/')
 def home():
