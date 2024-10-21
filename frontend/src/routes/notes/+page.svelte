@@ -38,17 +38,18 @@
         console.log(query)
 
         
-        // try {
-        //     const response = await fetch(`http://your-api-endpoint.com/search?query=${query}`);
-        //     if (!response.ok) {
-        //         throw new Error('Network response was not ok');
-        //     }
-        //     const results = await response.json();
-        //     console.log('Search results:', results);
-        //     // Update your notes or display results as needed
-        // } catch (error) {
-        //     console.error('Error fetching search results:', error);
-        // }
+        try {
+            const response = await fetch(` http://127.0.0.1:5000/notes/search?query=${query}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            // const results = await response.json();
+            mails = await response.json()
+            // console.log('Search results:', results);
+            // Update your notes or display results as needed
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        }
     }
 
     onMount(async () => {
