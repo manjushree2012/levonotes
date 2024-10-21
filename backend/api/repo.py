@@ -3,6 +3,9 @@ from sqlalchemy.engine import URL
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import Column, Integer, String, DateTime, Text
 
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
 
 from dotenv import load_dotenv
@@ -31,6 +34,9 @@ class Reminder(Base):
     email = Column(String(100), nullable=False)
     message = Column(Text, nullable=False)
     reminder_time = Column(DateTime(), nullable=False)
+    note_id = Column(Integer, ForeignKey('notes.id'))
+
+    note = relationship("Note")
 
 class Note(Base):
     __tablename__ = 'notes'
@@ -38,9 +44,10 @@ class Note(Base):
     id = Column(Integer(), primary_key=True)
     title = Column(String(100), nullable=False)
     content = Column(Text, nullable=False)
-
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+
+    reminder = relationship("Reminder")
 
 Base.metadata.create_all(engine)
 
