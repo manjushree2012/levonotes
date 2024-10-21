@@ -5,7 +5,7 @@ Levonotes is a simple and clean note taking application. Built as a assignment u
 - Flask (Python)
 - Svelte & SvelteKit
 - SQLAlchemy
-- PostgreSQL
+- PostgreSQL (Supabase)
 
 ## Features
 - Create new notes
