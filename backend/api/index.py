@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from .repo import create_note, delete_note, get_all_notes, update_note, search_notes
+from .repo import create_note, delete_note, get_all_notes, update_note, search_notes, create_reminder, update_reminder, get_reminder_from_note, get_note
 from flask_cors import CORS
 
 from marshmallow import Schema, fields, ValidationError
@@ -79,23 +79,31 @@ def search_notes_route():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/reminder', methods=['POST'])
-@app.route('/reminder/<int:reminder_id>', methods=['PUT'])
-def create_or_update_reminder(reminder_id=None):
+# @app.route('/reminder', methods=['POST'])
+@app.route('/reminder/<int:note_id>', methods=['PUT'])
+def create_or_update_reminder(note_id):
     try:
-        data = note_schema.load(request.get_json())  # Reusing the NoteSchema for validation
+        data = request.get_json()  # Get the JSON data from the request
 
-        if reminder_id is None:
-            # Create a new reminder
-            new_reminder = create_note(data)  # Assuming create_note can handle reminders
-            return jsonify(new_reminder), 201
+        # Check if a reminder with the given note_id exists
+        existing_reminder = get_reminder_from_note(note_id)
+
+        if existing_reminder:
+            # Update the existing reminder with the new details
+            print('Help me')
+            updated_reminder = update_reminder(existing_reminder['id'], data)
+            return jsonify(updated_reminder), 200
         else:
-            # Update an existing reminder
-            updated_reminder = update_note(reminder_id, data)  # Assuming update_note can handle reminders
-            if updated_reminder:
-                return jsonify(updated_reminder), 200
+            note_exists = get_note(note_id)
+
+            if note_exists:
+                data['note_id'] = note_id  # Ensure the note_id is included in the data
+                new_reminder = create_reminder(data)
+                return jsonify(new_reminder), 201
             else:
-                return jsonify({"error": f"Reminder with id {reminder_id} not found"}), 404
+                return jsonify({"error": f"Note with id {note_id} not found"}), 404
     except ValidationError as err:
         return jsonify(err.messages), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
    
