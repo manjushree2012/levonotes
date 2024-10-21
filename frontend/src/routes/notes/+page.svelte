@@ -10,6 +10,10 @@
     let loading = true;
     let error = null;
 
+    let saveTimeout;
+    let saveInterval = 5000; // Set to 5000 ms (5 seconds) or 10000 ms (10 seconds)
+    let currentContent = '';
+
     const selectedNoteId = writable(null)
 
     onMount(async () => {
@@ -76,10 +80,20 @@
     }
 
     async function handleContentUpdate(event) {
-        console.log('Content updated:', event.detail.content); // Access updated content
-        // You can also update the parent's state or perform other actions here
-        console.log(selectedNote.id)
-        const content = event.detail.content
+        currentContent = event.detail.content
+
+        // Clear the existing timeout if it exists
+        if (saveTimeout) {
+            clearTimeout(saveTimeout);
+        }
+
+         // Set a new timeout to save content after the defined interval
+         saveTimeout = setTimeout(() => {
+            saveContent();
+        }, saveInterval);
+    }
+
+    async function saveContent() {
         const title = "Shopping List"
 		try {
             const response = await fetch(`http://127.0.0.1:5000/note/${selectedNote.id}`, {
@@ -87,7 +101,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ title, content })
+                body: JSON.stringify({ title, content: currentContent })
             });
 
             if (!response.ok) {
@@ -239,7 +253,6 @@
                         </div>
 
                         <div class="flex-1 overflow-y-auto whitespace-pre-wrap p-4 text-sm">
-                            {selectedNote.content}
                             <Tiptap content={selectedNote.content} on:contentUpdated={handleContentUpdate} />
                         </div>
                         <Separator class="mt-auto" />

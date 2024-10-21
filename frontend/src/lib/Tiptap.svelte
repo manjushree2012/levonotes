@@ -27,12 +27,8 @@
 			onUpdate({editor}) {
 				const content = editor.getHTML()
 				
-				// updateContent(content)
-
-				dispatch('contentUpdated', { content }); // Dispatch the event with the updated content
-
-
-				
+				// Dispatch the event with the updated content
+				dispatch('contentUpdated', { content });				
 			}
 		});
 	});
@@ -42,28 +38,6 @@
 			editor.destroy();
 		}
 	});
-
-	async function updateContent(content) {
-		const title = "Shopping List"
-		try {
-            const response = await fetch('http://127.0.0.1:5000/note', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ title, content })
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            console.log('Update successful:', data);
-        } catch (error) {
-            console.error('Error updating content:', error);
-        }
-	}
 </script>
 
 {#if editor}
