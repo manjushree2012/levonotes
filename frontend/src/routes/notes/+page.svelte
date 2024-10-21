@@ -185,26 +185,33 @@
     }
 
     async function updateDateAPI(newDate) {
-        console.log('Reminder changed')
+        if (selectedNote) {
+            console.log('Reminder changed')
 
-        try {
-            const response = await fetch('http://your-api-endpoint.com/update-date', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ date: newDate }),
-            });
+            const email = "levo@mailinator.com"
+            const message = "Random email body."
+            const reminder_time = newDate
+            const note_id = selectedNote.id
 
-            if (!response.ok) {
-                throw new Error('Failed to update date');
+            try {
+                const response = await fetch(`http://127.0.0.1:5000/reminder/${note_id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, message, reminder_time }),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update date');
+                }
+
+                const result = await response.json();
+                console.log('Date updated successfully:', result);
+            } catch (error) {
+                console.error('Error updating date:', error);
             }
-
-            const result = await response.json();
-            console.log('Date updated successfully:', result);
-        } catch (error) {
-            console.error('Error updating date:', error);
-        }
+        }     
 
     }
 </script>
