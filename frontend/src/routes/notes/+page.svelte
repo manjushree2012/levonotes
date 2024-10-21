@@ -144,12 +144,12 @@
 				<Tabs.Content value="all" class="m-0">
                     <!-- Notes List Start -->
 
-                    <!-- if selected add bg-muted else Not in that button class -->
-                    <!-- <button class="hover:bg-accent flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all bg-muted" on:click={() => mailStore.setMail(item.id)}> -->
                     <ScrollArea class="h-screen">
                         <div class="flex flex-col gap-2 p-4 pt-0">
                             {#each mails as item}
-                                <button class="hover:bg-accent flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all" on:click={() => selectMail(item.id) }>
+                                <button 
+                                class={`hover:bg-accent flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all ${$selectedNoteId === item.id ? 'bg-muted' : ''}`} 
+                                on:click={() => selectMail(item.id) }>
                                     <div class="flex w-full flex-col gap-1">
                                         <div class="flex items-center">
                                             <div class="flex items-center gap-2">
