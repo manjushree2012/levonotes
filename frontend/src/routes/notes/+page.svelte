@@ -3,6 +3,10 @@
     import Tiptap from '$lib/Tiptap.svelte'
 
     import { writable } from 'svelte/store';
+    import { DateInput } from 'date-picker-svelte'
+
+    let date = new Date()
+
 
 
 
@@ -207,6 +211,12 @@
                             </Tooltip.Trigger>
                             <Tooltip.Content>Move to trash</Tooltip.Content>
                         </Tooltip.Root>
+
+                        <DateInput 
+                            bind:value={date}
+                            timePrecision="minute"                            
+                        />
+
 
                         <Separator orientation="vertical" class="mx-1 h-6" />
 
