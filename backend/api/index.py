@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from .repo import create_note
+from repo import create_note
 
 from marshmallow import Schema, fields, ValidationError
 
