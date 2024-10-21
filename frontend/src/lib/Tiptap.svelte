@@ -6,11 +6,18 @@
 	let element;
 	let editor;
 
+	export let content;
+
+	 // Watch for changes in the content prop
+	 $: if (editor && content !== editor.getHTML()) {
+        editor.commands.setContent(content); // Update editor content when prop changes
+    }
+
 	onMount(() => {
 		editor = new Editor({
 			element: element,
 			extensions: [StarterKit],
-			content: '<p>Hello World! 🌍️ </p>',
+			content: content,
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
 				editor = editor;

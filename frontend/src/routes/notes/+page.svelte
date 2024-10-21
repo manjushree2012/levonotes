@@ -231,7 +231,8 @@
                         </div>
 
                         <div class="flex-1 overflow-y-auto whitespace-pre-wrap p-4 text-sm">
-                            <Tiptap />
+                            {selectedNote.content}
+                            <Tiptap content={selectedNote.content} />
                         </div>
                         <Separator class="mt-auto" />
                     </div>
