@@ -8,13 +8,14 @@ Flask-Mailman==1.1.1
 Flask-Migrate==4.0.7
 Flask-SQLAlchemy==3.1.1
 greenlet==3.1.1
+humanize==4.11.0
 itsdangerous==2.2.0
 Jinja2==3.1.4
 Mako==1.3.5
 MarkupSafe==3.0.2
 marshmallow==3.23.0
 packaging==24.1
-# psycopg2==2.9.10
+psycopg2==2.9.10
 psycopg2-binary==2.9.10
 python-dotenv==1.0.1
 SQLAlchemy==2.0.36

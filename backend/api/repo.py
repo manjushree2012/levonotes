@@ -11,6 +11,8 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 
+import humanize
+
 load_dotenv()
 
 url = URL.create(
@@ -48,6 +50,17 @@ class Note(Base):
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
     reminder = relationship("Reminder")
+
+    def to_dict(self):
+        return {
+            'id'                 : self.id,
+            'title'              : self.title,
+            'content'            : self.content,
+            'created_at'         : self.created_on,
+            'updated_on'         : self.updated_on,
+            'updated_at_readable': humanize.naturaltime(self.updated_on) if self.updated_on else None,
+        }
+
 
 Base.metadata.create_all(engine)
 
@@ -95,15 +108,7 @@ def delete_note(note_id):
 def get_all_notes():
     try:
         notes = session.query(Note).all()
-        return [
-            {
-                'id': note.id,
-                'title': note.title,
-                'content': note.content,
-                'created_on': note.created_on,
-                'updated_on': note.updated_on
-            } for note in notes
-        ]
+        return [note.to_dict() for note in notes]
     except Exception as e:
         session.rollback()
         raise e
