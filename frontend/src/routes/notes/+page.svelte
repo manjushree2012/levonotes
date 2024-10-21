@@ -160,38 +160,39 @@
 		<Resizable.Handle withHandle />
 		<Resizable.Pane defaultSize={defaultLayout[2]}>
             <div class="flex h-full flex-col">
-                <div class="mb-1 flex items-center p-2">
-                    <div class="flex items-center gap-2">
-                        <Tooltip.Root openDelay={0} group>
-                            <Tooltip.Trigger
-                                id="move_to_trash_tooltip"
-                                class={buttonVariants({ variant: "ghost", size: "icon" })}>
-                                <Trash2 />
-                                <span class="sr-only">Move to trash</span>
-                            </Tooltip.Trigger>
-                            <Tooltip.Content>Move to trash</Tooltip.Content>
-                        </Tooltip.Root>
+                {#if selectedNote}
+                    <div class="mb-1 flex items-center p-2">
+                        <div class="flex items-center gap-2">
+                            <Tooltip.Root openDelay={0} group>
+                                <Tooltip.Trigger
+                                    id="move_to_trash_tooltip"
+                                    class={buttonVariants({ variant: "ghost", size: "icon" })}>
+                                    <Trash2 />
+                                    <span class="sr-only">Move to trash</span>
+                                </Tooltip.Trigger>
+                                <Tooltip.Content>Move to trash</Tooltip.Content>
+                            </Tooltip.Root>
 
-                        <DateInput 
-                            bind:value={date}
-                            timePrecision="minute"                            
-                        />
-                        <Separator orientation="vertical" class="mx-1 h-6" />
+                            <DateInput 
+                                bind:value={date}
+                                timePrecision="minute"                            
+                            />
+                            <Separator orientation="vertical" class="mx-1 h-6" />
+                        </div>
+                        <div class="ml-auto flex items-center gap-2">
+                            Loader here
+                        </div>
+                        <Separator orientation="vertical" class="mx-2 h-6" />
                     </div>
-                    <div class="ml-auto flex items-center gap-2">
-                        Loader here
-                    </div>
-                    <Separator orientation="vertical" class="mx-2 h-6" />
-                </div>
+                {/if}
                 <Separator />
                 {#if selectedNote}
                     <div class="flex h-full flex-1 flex-col overflow-hidden">
                         <div class="flex items-start p-4">
                             <div class="flex items-start gap-4 text-sm">
                                 <div class="grid gap-1">
-                                    <!-- <div class="font-semibold">Alison Smith</div> -->
                                     <h4 class="scroll-m-20 text-2xl font-semibold tracking-tight">
-                                        {selectedNote ? selectedNote.title : 'Select a note'} 
+                                        {selectedNote.title } 
                                     </h4>
                                 </div>
                             </div>
