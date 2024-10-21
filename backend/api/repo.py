@@ -3,6 +3,7 @@ from sqlalchemy.engine import URL
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import Column, Integer, String, DateTime, Text
 
+from datetime import datetime
 
 from dotenv import load_dotenv
 import os
@@ -31,6 +32,15 @@ class Reminder(Base):
     message = Column(Text, nullable=False)
     reminder_time = Column(DateTime(), nullable=False)
 
+class Note(Base):
+    __tablename__ = 'notes'
+
+    id = Column(Integer(), primary_key=True)
+    title = Column(String(100), nullable=False)
+    content = Column(Text, nullable=False)
+
+    created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
 Base.metadata.create_all(engine)
 
@@ -44,4 +54,22 @@ def get_due_reminders():
     due_reminders = session.query(Reminder).filter(Reminder.reminder_time <= now).all()
 
     return due_reminders
+
+def create_note(data):
+    new_note = Note(
+        title=data['title'],
+        content=data['content']
+    )
+    session.add(new_note)
+    session.commit()
+
+    note_dict = {
+        'id': new_note.id,
+        'title': new_note.title,
+        'content': new_note.content,
+        'created_on': new_note.created_on,
+        'updated_on': new_note.updated_on
+    }
+    return note_dict
+
 

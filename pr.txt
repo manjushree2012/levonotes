@@ -2,3 +2,5 @@ shadcn-config
 dashboard-design
 notes-page-design
 setup-mailer
+create-notes-api
+test-commit
