@@ -6,10 +6,6 @@
     import { DateInput } from 'date-picker-svelte'
 
     let reminderDateTime = new Date()
-
-
-
-
     let mails = [];
     let loading = true;
     let error = null;
@@ -30,19 +26,6 @@
         }
     });
 
-
-
-
-	import Search from "lucide-svelte/icons/search";
-	// import { primaryRoutes, secondaryRoutes } from "../config.js";
-	// import { mailStore } from "../store.js";
-	// import type { Account, Mail } from "../data.js";
-	// import AccountSwitcher from "./account-switcher.svelte";
-	// import MailDisplay from "./mail-display.svelte";
-	// import MailList from "./mail-list.svelte";
-	// import Nav from "./nav.svelte";
-	import { cn } from "$lib/utils.js";
-
     import * as Resizable from "$lib/components/ui/resizable";
     import { Separator } from "$lib/components/ui/separator";
     import * as Tabs from "$lib/components/ui/tabs";
@@ -59,7 +42,6 @@
 
 	export let defaultLayout = [265, 440, 655];
 	export let defaultCollapsed = false;
-	// export let navCollapsedSize: number;
 
 	let isCollapsed = defaultCollapsed;
 
