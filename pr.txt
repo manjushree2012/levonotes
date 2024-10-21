@@ -4,3 +4,4 @@ notes-page-design
 setup-mailer
 create-notes-api
 test-commit
+delete-note-api
