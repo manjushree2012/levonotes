@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from .repo import create_note, delete_note, get_all_notes, update_note
+from .repo import create_note, delete_note, get_all_notes, update_note, search_notes
 from flask_cors import CORS
 
 from marshmallow import Schema, fields, ValidationError
@@ -64,5 +64,17 @@ def update_notes(note_id):
             return jsonify({"error": f"Note with id {note_id} not found"}), 404
     except ValidationError as err:
         return jsonify(err.messages), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/notes/search', methods=['GET'])
+def search_notes_route():
+    query = request.args.get('query', '')
+    if not query:
+        return jsonify({"error": "Query parameter is required"}), 400
+
+    try:
+        results = search_notes(query)
+        return jsonify(results), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
