@@ -258,9 +258,7 @@
                                 on:click={() => selectMail(item.id) }>
                                     <div class="flex w-full flex-col gap-1">
                                         <div class="flex items-center">
-                                            <div class="flex items-center gap-2">
-                                                <span class="flex h-2 w-2 rounded-full bg-blue-600" />
-                                                <div class="font-semibold">{item.title}</div>
+                                            <div class="flex items-center gap-2">                                               
                                             </div>
 
                                             <!-- ml-auto text-xs text-muted-foreground -->
@@ -315,13 +313,6 @@
                 {#if selectedNote}
                     <div class="flex h-full flex-1 flex-col overflow-hidden">
                         <div class="flex items-start p-4">
-                            <div class="flex items-start gap-4 text-sm">
-                                <div class="grid gap-1">
-                                    <h4 class="scroll-m-20 text-2xl font-semibold tracking-tight">
-                                        {selectedNote.title } 
-                                    </h4>
-                                </div>
-                            </div>
                             <div class="text-muted-foreground ml-auto text-xs">
                                 Updated: { selectedNote.updated_at_readable }
                             </div>
