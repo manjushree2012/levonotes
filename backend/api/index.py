@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from .repo import create_note, delete_note
+from .repo import create_note, delete_note, get_all_notes
 
 from marshmallow import Schema, fields, ValidationError
 
@@ -38,5 +38,13 @@ def delete_notes(note_id):
             return jsonify({"message": f"Note with id {note_id} deleted successfully"}), 200
         else:
             return jsonify({"error": f"Note with id {note_id} not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/notes', methods=['GET'])
+def list_notes():
+    try:
+        notes = get_all_notes()
+        return jsonify(notes), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
