@@ -153,24 +153,12 @@
                         </div>
                     </ScrollArea>
 				</Tabs.Content>
-				<Tabs.Content value="unread" class="m-0">
-					<!-- <MailList items={mails.filter((item) => !item.read)} /> -->
-				</Tabs.Content>
 			</Tabs.Root>
 		</Resizable.Pane>
 
         <!--Display note component seperate from here -->
 		<Resizable.Handle withHandle />
 		<Resizable.Pane defaultSize={defaultLayout[2]}>
-			<!-- <MailDisplay mail={mails.find((item) => item.id === $mailStore.selected) || null} /> -->
-
-
-
-
-
-
-
-
             <div class="flex h-full flex-col">
                 <div class="mb-1 flex items-center p-2">
                     <div class="flex items-center gap-2">
@@ -188,70 +176,7 @@
                             bind:value={date}
                             timePrecision="minute"                            
                         />
-
-
                         <Separator orientation="vertical" class="mx-1 h-6" />
-
-                        <!-- <Tooltip.Root openDelay={0} group>
-                            <Popover.Root portal={null}>
-                                <Tooltip.Trigger asChild let:builder={tooltip_builder} id="snooze_popover">
-                                    <Popover.Trigger asChild let:builder={popover_builder} id="snooze_popover">
-                                        <Button
-                                            builders={[tooltip_builder, popover_builder]}
-                                            variant="ghost"
-                                            size="icon"
-\                                        >
-                                            <Icons.Clock class="size-4" />
-                                            <span class="sr-only">Remind me</span>
-                                        </Button>
-                                    </Popover.Trigger>
-                                </Tooltip.Trigger>
-
-                                <Popover.Content class="flex w-[535px] p-0">
-                                    <div class="flex flex-col gap-2 border-r px-2 py-4">
-                                        <div class="px-4 text-sm font-medium">Snooze until</div>
-                                        <div class="grid min-w-[250px] gap-1">
-                                            <Button variant="ghost" class="justify-start font-normal">
-                                                Later today
-                                                <span class="text-muted-foreground ml-auto">
-                                                    {relativeFormatter.format(
-                                                        todayDate.add({ hours: 4 }).toDate()
-                                                    )}
-                                                </span>
-                                            </Button>
-                                            <Button variant="ghost" class="justify-start font-normal">
-                                                Tomorrow
-                                                <span class="text-muted-foreground ml-auto">
-                                                    {relativeFormatter.format(
-                                                        todayDate.add({ days: 1 }).toDate()
-                                                    )}
-                                                </span>
-                                            </Button>
-                                            <Button variant="ghost" class="justify-start font-normal">
-                                                This weekend
-                                                <span class="text-muted-foreground ml-auto">
-                                                    {relativeFormatter.format(getClosestWeekend())}
-                                                </span>
-                                            </Button>
-                                            <Button variant="ghost" class="justify-start font-normal">
-                                                Next week
-                                                <span class="text-muted-foreground ml-auto">
-                                                    {relativeFormatter.format(
-                                                        todayDate.add({ weeks: 1 }).toDate()
-                                                    )}
-                                                </span>
-                                            </Button>
-                                        </div>
-                                    </div>
-                                    <div class="p-2">
-                                        <Calendar bind:value={todayDate} initialFocus />
-                                    </div>
-                                </Popover.Content>
-                            </Popover.Root>
-                            <Tooltip.Content>Snooze</Tooltip.Content>
-                        </Tooltip.Root> -->
-
-
                     </div>
                     <div class="ml-auto flex items-center gap-2">
                         Loader here
@@ -284,48 +209,6 @@
                     <div class="text-muted-foreground p-8 text-center">No note has been selected.</div>
                 {/if}
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		</Resizable.Pane>
-
 	</Resizable.PaneGroup>
 </div>
