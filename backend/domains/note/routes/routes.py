@@ -28,9 +28,9 @@ def delete_notes(note_id):
     try:
         result = delete_note(note_id)
         if result:
-            return jsonify({"message": f"Note with id {note_id} deleted successfully"}), 200
+            return jsonify({"message": f"Note with id {note_id} deleted successfully."}), 200
         else:
-            return jsonify({"error": f"Note with id {note_id} not found"}), 404
+            return jsonify({"error": f"Note with id {note_id} not found."}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -50,7 +50,7 @@ def update_notes(note_id):
         if updated_note:
             return jsonify(updated_note), 200
         else:
-            return jsonify({"error": f"Note with id {note_id} not found"}), 404
+            return jsonify({"error": f"Note with id {note_id} not found."}), 404
     except ValidationError as err:
         return jsonify(err.messages), 400
     except Exception as e:
@@ -60,7 +60,7 @@ def update_notes(note_id):
 def search_notes_route():
     query = request.args.get('query', '')
     if not query:
-        return jsonify({"error": "Query parameter is required"}), 400
+        return jsonify({"error": "Query parameter is required."}), 400
 
     try:
         results = search_notes(query)
@@ -88,7 +88,7 @@ def create_or_update_reminder(note_id):
                 new_reminder = create_reminder(data)
                 return jsonify(new_reminder), 201
             else:
-                return jsonify({"error": f"Note with id {note_id} not found"}), 404
+                return jsonify({"error": f"Note with id {note_id} not found."}), 404
     except ValidationError as err:
         return jsonify(err.messages), 400
     except Exception as e:
