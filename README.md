@@ -6,6 +6,8 @@ Levonotes is a simple and clean note taking application. Built as a assignment u
 - Svelte & SvelteKit
 - SQLAlchemy
 - PostgreSQL (Supabase)
+- Celery (For reminders)
+- ShadCN (UI Library)
 
 ## Features
 - Create new notes
@@ -14,6 +16,15 @@ Levonotes is a simple and clean note taking application. Built as a assignment u
 - Set a reminder
 
 ## Limitations
-- Any of the scaling issues have not been considered for this assignment purpose. So you wont see any pagination on the notes page. All the notes are fetched via a single API at once.
+- Any scaling issue have not been considered for this assignment purpose. So you wont see any pagination on the notes page. All the notes are fetched via a single API at once.
 - No user authentication (login, signup, forgot password) has been added because of the time limit. The core features have been provided though.
-- The reminders are not set up for time precision. Which means, a user might not get a reminder at the exact specified time. This is because the online service I was trying to host the project on had limited features regarding celery or cron job setup. So, I had to do a less effective solution. The solution I came up with was: **Github Actions**. A github actions has been set up to run every 5 minutes on a schedule. One run of the action sends mail to all the due reminders from the database. 
+- The reminders are not set up for time precision. Which means, a user might not get a reminder at the exact specified time. This is because the reminders are sent every 5 minutes via a scheduler.
+
+## How to run the scheduler ?
+Run the following commands:
+```
+> python app.py #to start the flask sever
+> celery -A app.celery worker --pool=solo -l info
+> celery -A app.celery beat -l info
+```
+
