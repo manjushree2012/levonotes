@@ -340,10 +340,10 @@
                             {/if}
 
                             <Button 
-                            class="ml-auto"  
+                            class="ml-auto"
+                            variant="destructive"
                             on:click={deleteNote}>
                                 <Trash2 class="mr-2 h-4 w-4"/>
-                                Delete
                             </Button>
 
                         </div>
