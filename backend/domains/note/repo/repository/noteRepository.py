@@ -1,8 +1,8 @@
 from domains.note.repo.models.note import Note, Reminder
 from domains.note.repo.repository.setup import session
+from datetime import datetime
 
 def get_due_reminders():
-    from datetime import datetime
     now = datetime.now()
 
     due_reminders = session.query(Reminder).filter(Reminder.reminder_time <= now).all()

@@ -8,16 +8,21 @@ from marshmallow import Schema, fields, ValidationError
 note_bp = Blueprint('notes', __name__)
 
 # Define a schema for validation
-class NoteSchema(Schema):
+class CreateNoteSchema(Schema):
     title = fields.String(required=True, validate=lambda x: len(x) > 0)
     content = fields.String(required=True)
 
-note_schema = NoteSchema()
+class UpdateNoteSchema(Schema):
+    title = fields.String(required=False, validate=lambda x: len(x) > 0)
+    content = fields.String(required=False)
+
+update_note_schema = UpdateNoteSchema()
+create_note_schema = CreateNoteSchema()
 
 @note_bp.route('/note', methods=['POST'])
 def create_notes():
     try:
-        data = note_schema.load(request.get_json())
+        data = create_note_schema.load(request.get_json())
     except ValidationError as err:
         return jsonify(err.messages), 400
 
@@ -46,7 +51,7 @@ def list_notes():
 @note_bp.route('/note/<int:note_id>', methods=['PUT'])
 def update_notes(note_id):
     try:
-        data = note_schema.load(request.get_json())
+        data = update_note_schema.load(request.get_json())
         updated_note = update_note(note_id, data)
         if updated_note:
             return jsonify(updated_note), 200
