@@ -9,6 +9,8 @@
     import { DateInput } from 'date-picker-svelte'
 
     import { Input } from "$lib/components/ui/input";
+    import { BellRing } from 'lucide-svelte';
+
 
 
     let reminderDateTime = new Date()
@@ -229,7 +231,7 @@
 					<h1 class="text-xl font-bold">All notes</h1>
                     <Button class="ml-auto">
                         <!-- <EnvelopeOpen class="mr-2 h-4 w-4" /> -->
-                        <NotebookPen  class="mr-2 h-4 w-4" />
+                        <NotebookPen class="mr-2 h-4 w-4" />
                         Create New
                       </Button>
 				</div>
@@ -280,7 +282,9 @@
                                     </div>
                                     {#if item.reminder}
                                         <div class="flex items-center gap-2">
-                                            <Badge> Remind me:  {item.reminder.reminder_time_readable} </Badge>
+                                            <Badge>
+                                                <BellRing class="mr-2 h-4 w-4" />
+                                                 Remind me:  {item.reminder.reminder_time_readable} </Badge>
                                         </div>
                                     {/if }
                                 </button>
