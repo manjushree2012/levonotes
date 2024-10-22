@@ -33,16 +33,23 @@
 
     let searchQuery = writable('');
     let remind_mail = writable('')
+    let debounceTimeout;
 
      // Reactive statement to call the search API when the search query changes
      $: searchQueryValue = $searchQuery;
-        $: {
-            if (searchQueryValue) {
-                searchAPI(searchQueryValue);
-            }
-        }
 
-        // Function to call the search API
+     $: {
+        if (debounceTimeout) {
+            clearTimeout(debounceTimeout);
+        }
+        if (searchQueryValue) {
+            debounceTimeout = setTimeout(() => {
+                searchAPI(searchQueryValue);
+            }, 1000); // 1 second of debounce time
+        }
+    }
+
+    // Function to call the search API
     async function searchAPI(query) {
         console.log('Search changed')
         console.log(query)
