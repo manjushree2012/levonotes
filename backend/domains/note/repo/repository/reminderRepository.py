@@ -1,5 +1,5 @@
 from domains.note.repo.models.note import Reminder
-from domains.note.repo.repository.noteRepository import session
+from domains.note.repo.repository.setup import session
 
 def add_reminder(data):
     new_reminder = Reminder(
