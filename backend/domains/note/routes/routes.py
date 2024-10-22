@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 
-from domains.note.repo.repository.noteRepository import create_note, get_all_notes, update_note, search_notes, create_reminder, update_reminder, get_reminder_from_note, get_note, delete_note
+from domains.note.repo.repository.noteRepository import create_note, get_all_notes, update_note, search_notes, get_note, delete_note
+from domains.note.repo.repository.reminderRepository import create_reminder, update_reminder, get_reminder_from_note
 from marshmallow import Schema, fields, ValidationError
 
 # Create a Blueprint for the note routes
