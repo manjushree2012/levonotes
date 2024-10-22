@@ -20,7 +20,9 @@
 
 
 
-    let reminderDateTime = new Date()
+    let reminderDateTime = new Date();
+    let minDateTime = new Date();
+
     let mails = [];
     let loading = true;
     let error = null;
@@ -346,7 +348,8 @@
                               
                             <DateInput 
                                 bind:value={reminderDateTime}
-                                timePrecision="minute"                            
+                                timePrecision="minute"      
+                                min={minDateTime}                      
                             />
                             to 
                             <Input
