@@ -9,14 +9,6 @@ app = Flask(__name__)
 # Enable CORS for all routes
 CORS(app)
 
-@app.route('/')
-def home():
-    return 'Hello, World!'
-
-@app.route('/about')
-def about():
-    return 'About'
-
 # Define a schema for validation
 class NoteSchema(Schema):
     title = fields.String(required=True, validate=lambda x: len(x) > 0)
