@@ -315,6 +315,8 @@
                     throw new Error('Failed to update date');
                 }
 
+                showToast('Reminder set successfully!');
+
                 const result = await response.json();
                 console.log('Date updated successfully:', result);
             } catch (error) {
