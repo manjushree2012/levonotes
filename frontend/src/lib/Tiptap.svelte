@@ -10,11 +10,6 @@
 
 	export let content;
 
-	 // Watch for changes in the content prop
-	 $: if (editor && content !== editor.getHTML()) {
-        editor.commands.setContent(content); // Update editor content when prop changes
-    }
-
 	onMount(() => {
 		editor = new Editor({
 			element: element,
