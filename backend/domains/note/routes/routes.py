@@ -2,19 +2,12 @@ from flask import Blueprint, request, jsonify
 
 from domains.note.repo.repository.noteRepository import create_note, get_all_notes, update_note, search_notes, get_note, delete_note
 from domains.note.repo.repository.reminderRepository import create_reminder, update_reminder, get_reminder_from_note
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import ValidationError
+
+from domains.note.validators.schema import CreateNoteSchema, UpdateNoteSchema
 
 # Create a Blueprint for the note routes
 note_bp = Blueprint('notes', __name__)
-
-# Define a schema for validation
-class CreateNoteSchema(Schema):
-    title = fields.String(required=True, validate=lambda x: len(x) > 0)
-    content = fields.String(required=True)
-
-class UpdateNoteSchema(Schema):
-    title = fields.String(required=False, validate=lambda x: len(x) > 0)
-    content = fields.String(required=False)
 
 update_note_schema = UpdateNoteSchema()
 create_note_schema = CreateNoteSchema()
