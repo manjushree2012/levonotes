@@ -37,14 +37,14 @@
     let minDateTime = new Date();
 
     // Reactive statement to update reminderDateTime based on selectedNote
-    $: {
-        if (selectedNote && selectedNote.reminder && selectedNote.reminder.reminder_time) {
-            console.log('Yo note ko reminder cha')
-            reminderDateTime = new Date(selectedNote.reminder.reminder_time);
-        } else {
-            reminderDateTime = new Date();
-        }
-    }
+    // $: {
+    //     if (selectedNote && selectedNote.reminder && selectedNote.reminder.reminder_time) {
+    //         console.log('Yo note ko reminder cha')
+    //         reminderDateTime = new Date(selectedNote.reminder.reminder_time);
+    //     } else {
+    //         reminderDateTime = new Date();
+    //     }
+    // }
 
     let mails = writable([])
     let loading = true;
@@ -115,6 +115,35 @@
         // return { localDateString, timeDifference };
         return timeDifference
     }
+
+    function formatReminderDate(reminderTime) {
+    const reminderDate = new Date(reminderTime);
+    const now = new Date();
+    const timeDiff = reminderDate - now; // Time difference in milliseconds
+
+    // Format the date to local string
+    const localDateString = reminderDate.toLocaleString();
+
+    // Calculate time difference in a readable format
+    const seconds = Math.floor(timeDiff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    let timeDifference;
+
+    if (days > 0) {
+        timeDifference = `${days} day${days > 1 ? 's' : ''} from now`;
+    } else if (hours > 0) {
+        timeDifference = `${hours} hour${hours > 1 ? 's' : ''} from now`;
+    } else if (minutes > 0) {
+        timeDifference = `${minutes} minute${minutes > 1 ? 's' : ''} from now`;
+    } else {
+        timeDifference = `${seconds} second${seconds > 1 ? 's' : ''} from now`;
+    }
+
+    return timeDifference;
+}
 
     // Function to call the search API
     async function searchAPI(query) {      
@@ -381,7 +410,7 @@
                                             <Badge>
                                                 <BellRing class="mr-2 h-4 w-4" />
                                                  Remind me:  
-                                                 { formatDate(item.reminder.reminder_time) }
+                                                 { formatReminderDate(item.reminder.reminder_time) }
                                                 </Badge>
                                         </div>
                                     {/if }
