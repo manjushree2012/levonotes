@@ -118,7 +118,7 @@ def delete_note(note_id):
 
 def get_all_notes():
     try:
-        notes = session.query(Note).all()
+        notes = session.query(Note).order_by(Note.updated_on.desc()).all()
         return [note.to_dict() for note in notes]
     except Exception as e:
         session.rollback()
