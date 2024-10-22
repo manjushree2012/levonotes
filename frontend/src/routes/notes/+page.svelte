@@ -154,9 +154,19 @@
         }
 
          // Set a new timeout to save content after the defined interval
-         saveTimeout = setTimeout(() => {
-            saveContent();
-        }, saveInterval);
+        saveTimeout = setTimeout(async () => {
+        await saveContent();
+
+        // Update the content in the mails store
+        mails.update(currentMails => {
+            return currentMails.map(mail => {
+                if (mail.id === $selectedNoteId) {
+                    return { ...mail, content: currentContent }; // Update the content
+                }
+                return mail; // Return the unchanged mail
+            });
+        });
+    }, saveInterval);
     }
 
     async function saveContent() {
