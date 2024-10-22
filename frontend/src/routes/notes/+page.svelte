@@ -322,7 +322,7 @@
                                 on:click={() => selectMail(item.id) }>
                                     <div class="flex w-full flex-col gap-1">
                                         <div class="flex items-center">
-                                            <div class="flex items-center gap-2">                                               
+                                            <div class="flex items-center gap-2">
                                             </div>
 
                                             <!-- ml-auto text-xs text-muted-foreground -->
@@ -357,20 +357,20 @@
                 {#if selectedNote}
                     <div class="mb-1 flex items-center p-2">
                         <div class="flex items-center gap-2">
-                              
-                            <DateInput 
-                                bind:value={reminderDateTime}
-                                timePrecision="minute"      
-                                min={minDateTime}  
-                                placeholder="Pick a future datetime"                    
-                            />
-                            to 
+                            Mail to:
                             <Input
                                 type="email"
                                 placeholder="Email address"
                                 class="pl-8"
                                 bind:value={$remind_mail} 
                             />
+                            @
+                            <DateInput 
+                                bind:value={reminderDateTime}
+                                timePrecision="minute"      
+                                min={minDateTime}  
+                                placeholder="Pick a future datetime"                    
+                            />                            
                             <Button variant="outline"  on:click={() => updateDateAPI() }>
                                 <BellPlus class="mr-2 h-4 w-4" />
                               </Button>
