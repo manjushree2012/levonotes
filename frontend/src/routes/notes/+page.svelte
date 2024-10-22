@@ -34,6 +34,16 @@
     let reminderDateTime = new Date();
     let minDateTime = new Date();
 
+    // Reactive statement to update reminderDateTime based on selectedNote
+    $: {
+        if (selectedNote && selectedNote.reminder && selectedNote.reminder.reminder_time) {
+            console.log('Yo note ko reminder cha')
+            reminderDateTime = new Date(selectedNote.reminder.reminder_time);
+        } else {
+            reminderDateTime = new Date();
+        }
+    }
+
     let mails = writable([])
     let loading = true;
     let error = null;
