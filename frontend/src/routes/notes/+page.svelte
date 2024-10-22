@@ -272,6 +272,28 @@
 
                 const result = await response.json();
                 console.log('Date updated successfully:', result);
+
+                  // Update the selectedNote with the new reminder data
+            const newReminder = {
+                email: result.email,
+                id: result.id,
+                message: result.message,
+                reminder_time: result.reminder_time,
+                reminder_time_readable: result.reminder_time_readable,
+            };
+
+            // Update the selectedNote
+            selectedNote.reminder = newReminder;
+
+            // Update the mails store to reflect this change
+            mails.update(currentMails => {
+                return currentMails.map(mail => {
+                    if (mail.id === selectedNote.id) {
+                        return { ...mail, reminder: newReminder }; // Update the reminder
+                    }
+                    return mail; // Return the unchanged mail
+                });
+            });
             } catch (error) {
                 console.error('Error updating date:', error);
             }
