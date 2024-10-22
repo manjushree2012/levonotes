@@ -12,6 +12,8 @@
     import { BellRing } from 'lucide-svelte';
 
     import Reload from "svelte-radix/Reload.svelte";
+    import { BellPlus } from 'lucide-svelte';
+
 
 
 
@@ -30,6 +32,7 @@
     const selectedNoteId = writable(null)
 
     let searchQuery = writable('');
+    let remind_mail = writable('')
 
      // Reactive statement to call the search API when the search query changes
      $: searchQueryValue = $searchQuery;
@@ -194,17 +197,17 @@
     $: selectedNote = mails.find(mail => mail.id === $selectedNoteId);
 
     // Reactive statement to call the API when the date changes
-    $: {
-        updateDateAPI(reminderDateTime);
-    }
+    // $: {
+    //     updateDateAPI(reminderDateTime);
+    // }
 
     async function updateDateAPI(newDate) {
         if (selectedNote) {
             console.log('Reminder changed')
 
-            const email = "levo@mailinator.com"
+            const email = $remind_mail
             const message = "Random email body."
-            const reminder_time = newDate
+            const reminder_time = reminderDateTime
             const note_id = selectedNote.id
 
             try {
@@ -314,22 +317,34 @@
                 {#if selectedNote}
                     <div class="mb-1 flex items-center p-2">
                         <div class="flex items-center gap-2">
-                                <Button 
-                                    class="ml-auto"  
-                                    on:click={deleteNote}>
-                                        <Trash2 class="mr-2 h-4 w-4"/>
-                                        Delete
-                                </Button>
+                              
                             <DateInput 
                                 bind:value={reminderDateTime}
                                 timePrecision="minute"                            
                             />
+                            to 
+                            <Input
+                                type="email"
+                                placeholder="Email address"
+                                class="pl-8"
+                                bind:value={$remind_mail} 
+                            />
+                            <Button variant="outline"  on:click={() => updateDateAPI() }>
+                                <BellPlus class="mr-2 h-4 w-4" />
+                              </Button>
                             <Separator orientation="vertical" class="mx-1 h-6" />
                         </div>
                         <div class="ml-auto flex items-center gap-2">
                             {#if isLoading}
                                 <Reload class="mr-2 h-4 w-4 animate-spin" />
                             {/if}
+
+                            <Button 
+                            class="ml-auto"
+                            variant="destructive"
+                            on:click={deleteNote}>
+                                <Trash2 class="mr-2 h-4 w-4"/>
+                            </Button>
 
                         </div>
                         <Separator orientation="vertical" class="mx-2 h-6" />
