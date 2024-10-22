@@ -317,12 +317,7 @@
                 {#if selectedNote}
                     <div class="mb-1 flex items-center p-2">
                         <div class="flex items-center gap-2">
-                                <Button 
-                                    class="ml-auto"  
-                                    on:click={deleteNote}>
-                                        <Trash2 class="mr-2 h-4 w-4"/>
-                                        Delete
-                                </Button>
+                              
                             <DateInput 
                                 bind:value={reminderDateTime}
                                 timePrecision="minute"                            
@@ -343,6 +338,13 @@
                             {#if isLoading}
                                 <Reload class="mr-2 h-4 w-4 animate-spin" />
                             {/if}
+
+                            <Button 
+                            class="ml-auto"  
+                            on:click={deleteNote}>
+                                <Trash2 class="mr-2 h-4 w-4"/>
+                                Delete
+                            </Button>
 
                         </div>
                         <Separator orientation="vertical" class="mx-2 h-6" />
