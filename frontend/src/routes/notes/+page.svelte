@@ -223,7 +223,7 @@
 
             const email = $remind_mail
             const message = "Random email body."
-            const reminder_time = reminderDateTime
+            const reminder_time = reminderDateTime.toISOString()
             const note_id = selectedNote.id
 
             try {
@@ -349,7 +349,8 @@
                             <DateInput 
                                 bind:value={reminderDateTime}
                                 timePrecision="minute"      
-                                min={minDateTime}                      
+                                min={minDateTime}  
+                                placeholder="Pick a future datetime"                    
                             />
                             to 
                             <Input
