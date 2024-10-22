@@ -3,6 +3,8 @@
     import Tiptap from '$lib/Tiptap.svelte'
 
     import { Search } from 'lucide-svelte';
+    import { X } from 'lucide-svelte';
+
 
 
     import { writable } from 'svelte/store';
@@ -70,18 +72,23 @@
     }
 
     onMount(async () => {
-        try {
-        const response = await fetch('http://127.0.0.1:5000/api/notes');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        mails = await response.json();
-        } catch (e) {
-        error = e.message;
-        } finally {
-        loading = false;
-        }
+        getNotes()
     });
+
+    async function getNotes()
+    {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/notes');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            mails = await response.json();
+            } catch (e) {
+            error = e.message;
+            } finally {
+            loading = false;
+        }
+    }
 
     import * as Resizable from "$lib/components/ui/resizable";
     import { Separator } from "$lib/components/ui/separator";
@@ -274,6 +281,18 @@
                                 bind:value={$searchQuery} 
                                 on:input={() => searchQuery.set($searchQuery)}
                             />
+
+                            {#if $searchQuery} <!-- Show the cross only if there's a search query -->
+                                <button class="absolute right-2 top-[50%] translate-y-[-50%]" 
+                                on:click={
+                                            () => { 
+                                                searchQuery.set('');
+                                                getNotes();
+                                        }}>
+                                    <X class="h-4 w-4 text-muted-foreground" />
+                                </button>
+                            {/if}
+
 						</div>
 					</form>
 				</div>
