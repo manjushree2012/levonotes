@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import Tiptap from '$lib/Tiptap.svelte'
     import NotesList from './(components)/notes-list.svelte';
+    import NoteDisplay from './(components)/note-display.svelte';
 
     import { Search } from 'lucide-svelte';
     import { X } from 'lucide-svelte';
@@ -291,63 +292,15 @@
         <!--Display note component seperate from here -->
 		<Resizable.Handle withHandle />
 		<Resizable.Pane defaultSize={defaultLayout[2]}>
-            <div class="flex h-full flex-col">
-                {#if selectedNote}
-                    <div class="mb-1 flex items-center p-2">
-                        <div class="flex items-center gap-2">
-                              
-                            <DateInput 
-                                bind:value={reminderDateTime}
-                                timePrecision="minute"      
-                                min={minDateTime}  
-                                placeholder="Pick a future datetime"                    
-                            />
-                            to 
-                            <Input
-                                type="email"
-                                placeholder="Email address"
-                                class="pl-8"
-                                bind:value={$remind_mail} 
-                            />
-                            <Button variant="outline"  on:click={() => updateDateAPI() }>
-                                <BellPlus class="mr-2 h-4 w-4" />
-                              </Button>
-                            <Separator orientation="vertical" class="mx-1 h-6" />
-                        </div>
-                        <div class="ml-auto flex items-center gap-2">
-                            {#if isLoading}
-                                <Reload class="mr-2 h-4 w-4 animate-spin" />
-                            {/if}
-
-                            <Button 
-                            class="ml-auto"
-                            variant="destructive"
-                            on:click={deleteNote}>
-                                <Trash2 class="mr-2 h-4 w-4"/>
-                            </Button>
-
-                        </div>
-                        <Separator orientation="vertical" class="mx-2 h-6" />
-                    </div>
-                {/if}
-                <Separator />
-                {#if selectedNote}
-                    <div class="flex h-full flex-1 flex-col overflow-hidden">
-                        <div class="flex items-start p-4">
-                            <div class="text-muted-foreground ml-auto text-xs">
-                                Updated: { selectedNote.updated_at_readable }
-                            </div>
-                        </div>
-
-                        <div class="flex-1 overflow-y-auto whitespace-pre-wrap p-4 text-sm">
-                            <Tiptap content={selectedNote.content} on:contentUpdated={handleContentUpdate} />
-                        </div>
-                        <Separator class="mt-auto" />
-                    </div>
-                {:else}
-                    <div class="text-muted-foreground p-8 text-center">No note has been selected.</div>
-                {/if}
-            </div>
+            <NoteDisplay 
+            selectedNote={selectedNote} 
+            reminderDateTime={reminderDateTime}
+            remind_mail={$remind_mail}
+            isLoading={isLoading}
+            updateDateAPI={updateDateAPI}
+            deleteNote={deleteNote}
+            handleContentUpdate={handleContentUpdate}
+        />
 		</Resizable.Pane>
 	</Resizable.PaneGroup>
 </div>
