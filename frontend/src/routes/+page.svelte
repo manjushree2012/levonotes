@@ -1,7 +1,6 @@
 <script lang="ts">
     import * as Dialog from "$lib/components/ui/dialog";
     import { Button } from "$lib/components/ui/button/index.js";
-
     import Code from "lucide-svelte/icons/code";
 </script>
   
@@ -52,9 +51,9 @@
                 Sync across devices, so your notes are always with you. Levonotes will and always be free.
             </p>
             <section class="flex w-full items-center justify-center space-x-4 py-4 md:pb-10">
-                <Button href="/login">Login</Button>
-                <Button href="/signup" variant="secondary">Sign Up</Button>
-                <Button href="https://github.com/manjushree2012/codepulse" variant="ghost">
+                <!-- <Button href="/login">Inbox</Button> -->
+                <Button href="/notes">Inbox</Button>
+                <Button href="https://github.com/manjushree2012/codepulse" variant="secondary">
                   <Code class="mr-2 h-4 w-4" />
                   Github
                 </Button>
