@@ -426,7 +426,8 @@
                     <div class="flex h-full flex-1 flex-col overflow-hidden">
                         <div class="flex items-start p-4">
                             <div class="text-muted-foreground ml-auto text-xs">
-                                Updated: { selectedNote.updated_at_readable }
+                                Updated: 
+                                { formatDate(selectedNote.updated_on) }
                             </div>
                         </div>
 
