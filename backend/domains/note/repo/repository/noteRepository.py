@@ -9,6 +9,19 @@ def get_due_reminders():
 
     return due_reminders
 
+def delete_reminder(id):
+    try:
+        reminder = session.query(Reminder).filter(Reminder.id == id).first()
+        if reminder:
+            session.delete(reminder)
+            session.commit()
+            return True
+        else:
+            return False
+    except Exception as e:
+        session.rollback()
+        raise e
+
 def create_note(data):
     new_note = Note(
         title=data['title'],
