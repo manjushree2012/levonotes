@@ -10,3 +10,4 @@ update-note-api
 list-notes-in-UI
 create-new-note
 search-notes
+update-fixes
