@@ -227,7 +227,7 @@
             const note_id = selectedNote.id
 
             try {
-                const response = await fetch(`http://127.0.0.1:50000/api/reminder/${note_id}`, {
+                const response = await fetch(`http://127.0.0.1:5000/api/reminder/${note_id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
