@@ -125,6 +125,8 @@
     async function handleContentUpdate(event) {
         currentContent = event.detail.content
 
+        isLoading = true
+
         // Clear the existing timeout if it exists
         if (saveTimeout) {
             clearTimeout(saveTimeout);
@@ -139,7 +141,7 @@
     async function saveContent() {
         const title = "Shopping List"
 
-        isLoading = true; // Set loading to true before saving
+        // isLoading = true; // Set loading to true before saving
 
 		try {
             const response = await fetch(`http://127.0.0.1:5000/note/${selectedNote.id}`, {
@@ -327,7 +329,6 @@
                         <div class="ml-auto flex items-center gap-2">
                             {#if isLoading}
                                 <Reload class="mr-2 h-4 w-4 animate-spin" />
-                                Saving ...
                             {/if}
 
                         </div>
