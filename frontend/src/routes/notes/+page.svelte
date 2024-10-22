@@ -112,30 +112,8 @@
 
 	let isCollapsed = defaultCollapsed;
 
-    function get_badge_variant_from_label(label) {
-		if (["work"].includes(label.toLowerCase())) {
-			return "default";
-		}
-
-		if (["personal"].includes(label.toLowerCase())) {
-			return "outline";
-		}
-
-		return "secondary";
-	}
-
 	function onLayoutChange(sizes) {
 		document.cookie = `PaneForge:layout=${JSON.stringify(sizes)}`;
-	}
-
-	function onCollapse() {
-		isCollapsed = true;
-		document.cookie = `PaneForge:collapsed=${true}`;
-	}
-
-	function onExpand() {
-		isCollapsed = false;
-		document.cookie = `PaneForge:collapsed=${false}`;
 	}
 
     function selectMail(id) {
