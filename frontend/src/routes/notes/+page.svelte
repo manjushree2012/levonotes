@@ -380,7 +380,9 @@
                                         <div class="flex items-center gap-2">
                                             <Badge>
                                                 <BellRing class="mr-2 h-4 w-4" />
-                                                 Remind me:  {item.reminder.reminder_time_readable} </Badge>
+                                                 Remind me:  
+                                                 { formatDate(item.reminder.reminder_time) }
+                                                </Badge>
                                         </div>
                                     {/if }
                                 </button>
