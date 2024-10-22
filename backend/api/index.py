@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Register the note routes Blueprint
-app.register_blueprint(note_bp)
+app.register_blueprint(note_bp, url_prefix = '/api')
 
 if __name__ == '__main__':
     app.run(debug=True)
