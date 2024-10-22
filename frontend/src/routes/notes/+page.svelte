@@ -11,6 +11,9 @@
     import { Input } from "$lib/components/ui/input";
     import { BellRing } from 'lucide-svelte';
 
+    import Reload from "svelte-radix/Reload.svelte";
+
+
 
 
     let reminderDateTime = new Date()
@@ -21,6 +24,8 @@
     let saveTimeout;
     let saveInterval = 5000; // Set to 5000 ms (5 seconds) or 10000 ms (10 seconds)
     let currentContent = '';
+
+    let isLoading = false; // Add this line
 
     const selectedNoteId = writable(null)
 
@@ -133,6 +138,9 @@
 
     async function saveContent() {
         const title = "Shopping List"
+
+        isLoading = true; // Set loading to true before saving
+
 		try {
             const response = await fetch(`http://127.0.0.1:5000/note/${selectedNote.id}`, {
                 method: 'PUT',
@@ -150,6 +158,8 @@
             console.log('Update successful:', data);
         } catch (error) {
             console.error('Error updating content:', error);
+        } finally {
+            isLoading = false; // Set loading to false after saving
         }
     }
 
@@ -315,7 +325,11 @@
                             <Separator orientation="vertical" class="mx-1 h-6" />
                         </div>
                         <div class="ml-auto flex items-center gap-2">
-                            Loader here
+                            {#if isLoading}
+                                <Reload class="mr-2 h-4 w-4 animate-spin" />
+                                Saving ...
+                            {/if}
+
                         </div>
                         <Separator orientation="vertical" class="mx-2 h-6" />
                     </div>
