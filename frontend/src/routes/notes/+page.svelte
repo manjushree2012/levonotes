@@ -1,17 +1,28 @@
 <script>
     import { onMount } from 'svelte';
-    import Tiptap from '$lib/Tiptap.svelte'
+    import { writable } from 'svelte/store';
 
+    import Tiptap from '$lib/Tiptap.svelte'
+    import { BellRing } from 'lucide-svelte';
+    import Reload from "svelte-radix/Reload.svelte";
+    import { BellPlus } from 'lucide-svelte';
     import { Search } from 'lucide-svelte';
     import { X } from 'lucide-svelte';
-
-
-
-    import { writable } from 'svelte/store';
-    import { DateInput } from 'date-picker-svelte'
-
     import { Input } from "$lib/components/ui/input";
     import Toast from "$lib/components/ui/Toast.svelte"
+    import { DateInput } from 'date-picker-svelte'
+    import * as Resizable from "$lib/components/ui/resizable";
+    import { Separator } from "$lib/components/ui/separator";
+    import * as Tabs from "$lib/components/ui/tabs";
+    import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
+    import { Badge } from "$lib/components/ui/badge";
+    import { Button } from "$lib/components/ui/button";
+    import { Trash2 } from 'lucide-svelte';
+    import { NotebookPen } from 'lucide-svelte';
+
+    onMount(async () => {
+        getNotes()
+    });   
 
     let toastVisible = false;
     let toastMessage = '';
@@ -21,15 +32,6 @@
         toastMessage = message;
         toastVisible = true;
     }
-
-    import { BellRing } from 'lucide-svelte';
-
-    import Reload from "svelte-radix/Reload.svelte";
-    import { BellPlus } from 'lucide-svelte';
-
-
-
-
 
     let reminderDateTime = new Date();
     let minDateTime = new Date();
@@ -115,11 +117,7 @@
     }
 
     // Function to call the search API
-    async function searchAPI(query) {
-        console.log('Search changed')
-        console.log(query)
-
-        
+    async function searchAPI(query) {      
         try {
             const response = await fetch(` http://127.0.0.1:5000/api/notes/search?query=${query}`);
             if (!response.ok) {
@@ -134,10 +132,6 @@
             console.error('Error fetching search results:', error);
         }
     }
-
-    onMount(async () => {
-        getNotes()
-    });
 
     async function getNotes()
     {
@@ -155,49 +149,13 @@
         }
     }
 
-    import * as Resizable from "$lib/components/ui/resizable";
-    import { Separator } from "$lib/components/ui/separator";
-    import * as Tabs from "$lib/components/ui/tabs";
-    import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
-    import { Badge } from "$lib/components/ui/badge";
-
-    import * as Tooltip from "$lib/components/ui/tooltip";
-    import { Button, buttonVariants } from "$lib/components/ui/button";
-
-    import { Trash2 } from 'lucide-svelte';
-    import { AlarmClock } from 'lucide-svelte';
-
-    import { NotebookPen } from 'lucide-svelte';
-
-	export let defaultLayout = [265, 440, 655];
+    export let defaultLayout = [265, 440, 655];
 	export let defaultCollapsed = false;
 
 	let isCollapsed = defaultCollapsed;
 
-    function get_badge_variant_from_label(label) {
-		if (["work"].includes(label.toLowerCase())) {
-			return "default";
-		}
-
-		if (["personal"].includes(label.toLowerCase())) {
-			return "outline";
-		}
-
-		return "secondary";
-	}
-
 	function onLayoutChange(sizes) {
 		document.cookie = `PaneForge:layout=${JSON.stringify(sizes)}`;
-	}
-
-	function onCollapse() {
-		isCollapsed = true;
-		document.cookie = `PaneForge:collapsed=${true}`;
-	}
-
-	function onExpand() {
-		isCollapsed = false;
-		document.cookie = `PaneForge:collapsed=${false}`;
 	}
 
     function selectMail(id) {
@@ -232,9 +190,6 @@
 
     async function saveContent() {
         const title = "Shopping List"
-
-        // isLoading = true; // Set loading to true before saving
-
 		try {
             const response = await fetch(`http://127.0.0.1:5000/api/note/${selectedNote.id}`, {
                 method: 'PUT',
@@ -258,8 +213,6 @@
     }
 
     async function deleteNote(selectedNote) {
-        console.log(selectedNote)
-
         if ($selectedNoteId) {
             try {
                 const response = await fetch(`http://127.0.0.1:5000/api/note/${$selectedNoteId}`, {
