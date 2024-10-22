@@ -49,7 +49,7 @@
 
         
         try {
-            const response = await fetch(` http://127.0.0.1:5000/notes/search?query=${query}`);
+            const response = await fetch(` http://127.0.0.1:5000/api/notes/search?query=${query}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -64,7 +64,7 @@
 
     onMount(async () => {
         try {
-        const response = await fetch('http://127.0.0.1:5000/notes');
+        const response = await fetch('http://127.0.0.1:5000/api/notes');
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -147,7 +147,7 @@
         // isLoading = true; // Set loading to true before saving
 
 		try {
-            const response = await fetch(`http://127.0.0.1:5000/note/${selectedNote.id}`, {
+            const response = await fetch(`http://127.0.0.1:5000/api/note/${selectedNote.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -173,7 +173,7 @@
 
         if ($selectedNoteId) {
             try {
-                const response = await fetch(`http://127.0.0.1:5000/note/${$selectedNoteId}`, {
+                const response = await fetch(`http://127.0.0.1:5000/api/note/${$selectedNoteId}`, {
                     method: 'DELETE',
                 });
 
@@ -211,7 +211,7 @@
             const note_id = selectedNote.id
 
             try {
-                const response = await fetch(`http://127.0.0.1:5000/reminder/${note_id}`, {
+                const response = await fetch(`http://127.0.0.1:50000/api/reminder/${note_id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
