@@ -60,6 +60,15 @@
     let remind_mail = writable('')
     let debounceTimeout;
 
+     // Reactive statement to update remind_mail based on selectedNote
+     $: {
+        if (selectedNote && selectedNote.reminder && selectedNote.reminder.email) {
+            remind_mail.set(selectedNote.reminder.email);
+        } else {
+            remind_mail.set(''); // or set to null if you prefer
+        }
+    }
+
      // Reactive statement to call the search API when the search query changes
      $: searchQueryValue = $searchQuery;
 
