@@ -53,6 +53,37 @@
         }
     }
 
+      // Function to format the date in local format and calculate time difference
+      function formatDate(updatedOn) {
+        const updatedDate = new Date(updatedOn);
+        const now = new Date();
+        const timeDiff = now - updatedDate; // Time difference in milliseconds
+
+        // Format the date to local string
+        const localDateString = updatedDate.toLocaleString();
+
+        // Calculate time difference in a readable format
+        const seconds = Math.floor(timeDiff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        let timeDifference;
+
+        if (days > 0) {
+            timeDifference = `${days} day${days > 1 ? 's' : ''} ago`;
+        } else if (hours > 0) {
+            timeDifference = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        } else if (minutes > 0) {
+            timeDifference = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        } else {
+            timeDifference = `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+        }
+
+        // return { localDateString, timeDifference };
+        return timeDifference
+    }
+
     // Function to call the search API
     async function searchAPI(query) {
         console.log('Search changed')
@@ -325,10 +356,8 @@
                                             <div class="flex items-center gap-2">
                                             </div>
 
-                                            <!-- ml-auto text-xs text-muted-foreground -->
-                                             <!-- Add this class if selcted or smething for time wala class -->
                                             <div class="ml-auto text-xs text-foreground">
-                                                { item.updated_at_readable }
+                                                { formatDate(item.updated_on) }
                                             </div>
                                         </div>
                                     </div>
