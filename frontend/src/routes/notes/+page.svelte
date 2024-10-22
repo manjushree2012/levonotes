@@ -23,7 +23,7 @@
     let reminderDateTime = new Date();
     let minDateTime = new Date();
 
-    let mails = [];
+    let mails = writable([])
     let loading = true;
     let error = null;
 
@@ -65,7 +65,8 @@
                 throw new Error('Network response was not ok');
             }
             // const results = await response.json();
-            mails = await response.json()
+            const notes = await response.json()
+            mails.set(notes)
             // console.log('Search results:', results);
             // Update your notes or display results as needed
         } catch (error) {
@@ -84,7 +85,8 @@
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            mails = await response.json();
+            const notes = await response.json();
+            mails.set(notes)
             } catch (e) {
             error = e.message;
             } finally {
@@ -200,8 +202,8 @@
                 const data = await response.json();
                 console.log('Delete successful:', data);
 
-                // Optionally, you can remove the deleted note from the mails array
-                mails = mails.filter(mail => mail.id !== $selectedNoteId);
+                 // Remove the deleted note from the mails store
+                mails.update(currentMails => currentMails.filter(mail => mail.id !== $selectedNoteId));
                 selectedNoteId.set(null); // Clear the selected note
             } catch (error) {
                 console.error('Error deleting note:', error);
@@ -210,7 +212,7 @@
     }
 
     // Reactive variable to get the selected note object
-    $: selectedNote = mails.find(mail => mail.id === $selectedNoteId);
+    $: selectedNote = $mails.find(mail => mail.id === $selectedNoteId);
 
     // Reactive statement to call the API when the date changes
     // $: {
@@ -304,7 +306,7 @@
 
                     <ScrollArea class="h-screen">
                         <div class="flex flex-col gap-2 p-4 pt-0">
-                            {#each mails as item}
+                            {#each $mails as item}
                                 <button 
                                 class={`hover:bg-accent flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all ${$selectedNoteId === item.id ? 'bg-muted' : ''}`} 
                                 on:click={() => selectMail(item.id) }>
