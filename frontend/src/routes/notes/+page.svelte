@@ -1,26 +1,19 @@
 <script>
     import { onMount } from 'svelte';
-    import Tiptap from '$lib/Tiptap.svelte'
-    import NotesList from './(components)/notes-list.svelte';
-    import NoteDisplay from './(components)/note-display.svelte';
+    import { writable } from 'svelte/store';
 
     import { Search } from 'lucide-svelte';
-    import { X } from 'lucide-svelte';
-
-
-
-    import { writable } from 'svelte/store';
-    import { DateInput } from 'date-picker-svelte'
-
     import { Input } from "$lib/components/ui/input";
-    import { BellRing } from 'lucide-svelte';
+    import { X } from 'lucide-svelte';
+    import * as Resizable from "$lib/components/ui/resizable";
+    import { Separator } from "$lib/components/ui/separator";
+    import * as Tabs from "$lib/components/ui/tabs";
+    import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
+    import Button from "$lib/components/ui/button";
+    import { NotebookPen } from 'lucide-svelte';
 
-    import Reload from "svelte-radix/Reload.svelte";
-    import { BellPlus } from 'lucide-svelte';
-
-
-
-
+    import NotesList from './(components)/notes-list.svelte';
+    import NoteDisplay from './(components)/note-display.svelte';
 
     let reminderDateTime = new Date();
     let minDateTime = new Date();
@@ -69,7 +62,6 @@
             // const results = await response.json();
             mails = await response.json()
             // console.log('Search results:', results);
-            // Update your notes or display results as needed
         } catch (error) {
             console.error('Error fetching search results:', error);
         }
@@ -93,20 +85,6 @@
             loading = false;
         }
     }
-
-    import * as Resizable from "$lib/components/ui/resizable";
-    import { Separator } from "$lib/components/ui/separator";
-    import * as Tabs from "$lib/components/ui/tabs";
-    import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
-    import { Badge } from "$lib/components/ui/badge";
-
-    import * as Tooltip from "$lib/components/ui/tooltip";
-    import { Button, buttonVariants } from "$lib/components/ui/button";
-
-    import { Trash2 } from 'lucide-svelte';
-    import { AlarmClock } from 'lucide-svelte';
-
-    import { NotebookPen } from 'lucide-svelte';
 
 	export let defaultLayout = [265, 440, 655];
 	export let defaultCollapsed = false;
