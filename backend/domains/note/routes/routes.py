@@ -1,22 +1,21 @@
 from flask import Blueprint, request, jsonify
 
-from domains.note.repo.repository.noteRepository import create_note, get_all_notes, update_note, search_notes, create_reminder, update_reminder, get_reminder_from_note, get_note, delete_note
-from marshmallow import Schema, fields, ValidationError
+from domains.note.repo.repository.noteRepository import create_note, get_all_notes, update_note, search_notes, get_note, delete_note
+from domains.note.repo.repository.reminderRepository import create_reminder, update_reminder, get_reminder_from_note
+from marshmallow import ValidationError
+
+from domains.note.validators.schema import CreateNoteSchema, UpdateNoteSchema
 
 # Create a Blueprint for the note routes
 note_bp = Blueprint('notes', __name__)
 
-# Define a schema for validation
-class NoteSchema(Schema):
-    title = fields.String(required=True, validate=lambda x: len(x) > 0)
-    content = fields.String(required=True)
-
-note_schema = NoteSchema()
+update_note_schema = UpdateNoteSchema()
+create_note_schema = CreateNoteSchema()
 
 @note_bp.route('/note', methods=['POST'])
 def create_notes():
     try:
-        data = note_schema.load(request.get_json())
+        data = create_note_schema.load(request.get_json())
     except ValidationError as err:
         return jsonify(err.messages), 400
 
@@ -28,9 +27,9 @@ def delete_notes(note_id):
     try:
         result = delete_note(note_id)
         if result:
-            return jsonify({"message": f"Note with id {note_id} deleted successfully"}), 200
+            return jsonify({"message": f"Note with id {note_id} deleted successfully."}), 200
         else:
-            return jsonify({"error": f"Note with id {note_id} not found"}), 404
+            return jsonify({"error": f"Note with id {note_id} not found."}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -45,12 +44,12 @@ def list_notes():
 @note_bp.route('/note/<int:note_id>', methods=['PUT'])
 def update_notes(note_id):
     try:
-        data = note_schema.load(request.get_json())
+        data = update_note_schema.load(request.get_json())
         updated_note = update_note(note_id, data)
         if updated_note:
             return jsonify(updated_note), 200
         else:
-            return jsonify({"error": f"Note with id {note_id} not found"}), 404
+            return jsonify({"error": f"Note with id {note_id} not found."}), 404
     except ValidationError as err:
         return jsonify(err.messages), 400
     except Exception as e:
@@ -60,7 +59,7 @@ def update_notes(note_id):
 def search_notes_route():
     query = request.args.get('query', '')
     if not query:
-        return jsonify({"error": "Query parameter is required"}), 400
+        return jsonify({"error": "Query parameter is required."}), 400
 
     try:
         results = search_notes(query)
@@ -88,7 +87,7 @@ def create_or_update_reminder(note_id):
                 new_reminder = create_reminder(data)
                 return jsonify(new_reminder), 201
             else:
-                return jsonify({"error": f"Note with id {note_id} not found"}), 404
+                return jsonify({"error": f"Note with id {note_id} not found."}), 404
     except ValidationError as err:
         return jsonify(err.messages), 400
     except Exception as e:

@@ -11,6 +11,17 @@
     import { DateInput } from 'date-picker-svelte'
 
     import { Input } from "$lib/components/ui/input";
+    import Toast from "$lib/components/ui/Toast.svelte"
+
+    let toastVisible = false;
+    let toastMessage = '';
+
+     // Function to show the toast
+     function showToast(message) {
+        toastMessage = message;
+        toastVisible = true;
+    }
+
     import { BellRing } from 'lucide-svelte';
 
     import Reload from "svelte-radix/Reload.svelte";
@@ -23,7 +34,17 @@
     let reminderDateTime = new Date();
     let minDateTime = new Date();
 
-    let mails = [];
+    // Reactive statement to update reminderDateTime based on selectedNote
+    $: {
+        if (selectedNote && selectedNote.reminder && selectedNote.reminder.reminder_time) {
+            console.log('Yo note ko reminder cha')
+            reminderDateTime = new Date(selectedNote.reminder.reminder_time);
+        } else {
+            reminderDateTime = new Date();
+        }
+    }
+
+    let mails = writable([])
     let loading = true;
     let error = null;
 
@@ -39,6 +60,15 @@
     let remind_mail = writable('')
     let debounceTimeout;
 
+     // Reactive statement to update remind_mail based on selectedNote
+     $: {
+        if (selectedNote && selectedNote.reminder && selectedNote.reminder.email) {
+            remind_mail.set(selectedNote.reminder.email);
+        } else {
+            remind_mail.set(''); // or set to null if you prefer
+        }
+    }
+
      // Reactive statement to call the search API when the search query changes
      $: searchQueryValue = $searchQuery;
 
@@ -53,6 +83,37 @@
         }
     }
 
+      // Function to format the date in local format and calculate time difference
+      function formatDate(updatedOn) {
+        const updatedDate = new Date(updatedOn);
+        const now = new Date();
+        const timeDiff = now - updatedDate; // Time difference in milliseconds
+
+        // Format the date to local string
+        const localDateString = updatedDate.toLocaleString();
+
+        // Calculate time difference in a readable format
+        const seconds = Math.floor(timeDiff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        let timeDifference;
+
+        if (days > 0) {
+            timeDifference = `${days} day${days > 1 ? 's' : ''} ago`;
+        } else if (hours > 0) {
+            timeDifference = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        } else if (minutes > 0) {
+            timeDifference = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        } else {
+            timeDifference = `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+        }
+
+        // return { localDateString, timeDifference };
+        return timeDifference
+    }
+
     // Function to call the search API
     async function searchAPI(query) {
         console.log('Search changed')
@@ -65,7 +126,8 @@
                 throw new Error('Network response was not ok');
             }
             // const results = await response.json();
-            mails = await response.json()
+            const notes = await response.json()
+            mails.set(notes)
             // console.log('Search results:', results);
             // Update your notes or display results as needed
         } catch (error) {
@@ -84,7 +146,8 @@
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            mails = await response.json();
+            const notes = await response.json();
+            mails.set(notes)
             } catch (e) {
             error = e.message;
             } finally {
@@ -152,9 +215,19 @@
         }
 
          // Set a new timeout to save content after the defined interval
-         saveTimeout = setTimeout(() => {
-            saveContent();
-        }, saveInterval);
+        saveTimeout = setTimeout(async () => {
+        await saveContent();
+
+        // Update the content in the mails store
+        mails.update(currentMails => {
+            return currentMails.map(mail => {
+                if (mail.id === $selectedNoteId) {
+                    return { ...mail, content: currentContent }; // Update the content
+                }
+                return mail; // Return the unchanged mail
+            });
+        });
+    }, saveInterval);
     }
 
     async function saveContent() {
@@ -200,8 +273,11 @@
                 const data = await response.json();
                 console.log('Delete successful:', data);
 
-                // Optionally, you can remove the deleted note from the mails array
-                mails = mails.filter(mail => mail.id !== $selectedNoteId);
+                 // Show toast on successful deletion
+                 showToast('Note deleted successfully!');
+
+                 // Remove the deleted note from the mails store
+                mails.update(currentMails => currentMails.filter(mail => mail.id !== $selectedNoteId));
                 selectedNoteId.set(null); // Clear the selected note
             } catch (error) {
                 console.error('Error deleting note:', error);
@@ -210,7 +286,7 @@
     }
 
     // Reactive variable to get the selected note object
-    $: selectedNote = mails.find(mail => mail.id === $selectedNoteId);
+    $: selectedNote = $mails.find(mail => mail.id === $selectedNoteId);
 
     // Reactive statement to call the API when the date changes
     // $: {
@@ -239,6 +315,8 @@
                     throw new Error('Failed to update date');
                 }
 
+                showToast('Reminder set successfully!');
+
                 const result = await response.json();
                 console.log('Date updated successfully:', result);
             } catch (error) {
@@ -248,6 +326,8 @@
 
     }
 </script>
+
+<Toast message={toastMessage} visible={toastVisible} />
 
 <div class="hidden md:block">
 	<Resizable.PaneGroup
@@ -304,19 +384,17 @@
 
                     <ScrollArea class="h-screen">
                         <div class="flex flex-col gap-2 p-4 pt-0">
-                            {#each mails as item}
+                            {#each $mails as item}
                                 <button 
                                 class={`hover:bg-accent flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all ${$selectedNoteId === item.id ? 'bg-muted' : ''}`} 
                                 on:click={() => selectMail(item.id) }>
                                     <div class="flex w-full flex-col gap-1">
                                         <div class="flex items-center">
-                                            <div class="flex items-center gap-2">                                               
+                                            <div class="flex items-center gap-2">
                                             </div>
 
-                                            <!-- ml-auto text-xs text-muted-foreground -->
-                                             <!-- Add this class if selcted or smething for time wala class -->
                                             <div class="ml-auto text-xs text-foreground">
-                                                { item.updated_at_readable }
+                                                { formatDate(item.updated_on) }
                                             </div>
                                         </div>
                                     </div>
@@ -345,20 +423,20 @@
                 {#if selectedNote}
                     <div class="mb-1 flex items-center p-2">
                         <div class="flex items-center gap-2">
-                              
-                            <DateInput 
-                                bind:value={reminderDateTime}
-                                timePrecision="minute"      
-                                min={minDateTime}  
-                                placeholder="Pick a future datetime"                    
-                            />
-                            to 
+                            Mail to:
                             <Input
                                 type="email"
                                 placeholder="Email address"
                                 class="pl-8"
                                 bind:value={$remind_mail} 
                             />
+                            @
+                            <DateInput 
+                                bind:value={reminderDateTime}
+                                timePrecision="minute"      
+                                min={minDateTime}  
+                                placeholder="Pick a future datetime"                    
+                            />                            
                             <Button variant="outline"  on:click={() => updateDateAPI() }>
                                 <BellPlus class="mr-2 h-4 w-4" />
                               </Button>
@@ -385,7 +463,8 @@
                     <div class="flex h-full flex-1 flex-col overflow-hidden">
                         <div class="flex items-start p-4">
                             <div class="text-muted-foreground ml-auto text-xs">
-                                Updated: { selectedNote.updated_at_readable }
+                                Updated: 
+                                { formatDate(selectedNote.updated_on) }
                             </div>
                         </div>
 

@@ -28,7 +28,6 @@ class Note(Base):
             'reminder'           : self.reminder.to_dict() if self.reminder else None,            
         }
 
-
 class Reminder(Base):
     __tablename__ = 'reminders'
 
@@ -48,3 +47,5 @@ class Reminder(Base):
             'reminder_time' : self.reminder_time,
             'reminder_time_readable' : humanize.naturaltime(self.reminder_time) if self.reminder_time else None,
         }
+
+

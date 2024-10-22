@@ -7,7 +7,7 @@ from flask_mailman import Mail, EmailMessage
 from celery import Celery
 from celery.schedules import crontab
 
-from repo import get_due_reminders
+from domains.note.repo.repository.noteRepository import get_due_reminders, delete_reminder
 
 load_dotenv()
 
@@ -46,6 +46,9 @@ def check_reminders():
         for reminder in get_due_reminders():
             send_reminder_mail(reminder.email, reminder.message)
             print(f"Reminder mail sent to: {reminder.email}")
+
+            delete_reminder(reminder.id)
+
     return "Reminders checked and sent"
 
 @celery.on_after_configure.connect
