@@ -11,6 +11,17 @@
     import { DateInput } from 'date-picker-svelte'
 
     import { Input } from "$lib/components/ui/input";
+    import Toast from "$lib/components/ui/Toast.svelte"
+
+    let toastVisible = false;
+    let toastMessage = '';
+
+     // Function to show the toast
+     function showToast(message) {
+        toastMessage = message;
+        toastVisible = true;
+    }
+
     import { BellRing } from 'lucide-svelte';
 
     import Reload from "svelte-radix/Reload.svelte";
@@ -243,6 +254,9 @@
                 const data = await response.json();
                 console.log('Delete successful:', data);
 
+                 // Show toast on successful deletion
+                 showToast('Note deleted successfully!');
+
                  // Remove the deleted note from the mails store
                 mails.update(currentMails => currentMails.filter(mail => mail.id !== $selectedNoteId));
                 selectedNoteId.set(null); // Clear the selected note
@@ -291,6 +305,8 @@
 
     }
 </script>
+
+<Toast message={toastMessage} visible={toastVisible} />
 
 <div class="hidden md:block">
 	<Resizable.PaneGroup
