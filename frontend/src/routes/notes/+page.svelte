@@ -206,30 +206,6 @@
         }, saveInterval);
     }
 
-    async function saveContent() {
-        const title = "Shopping List"
-		try {
-            const response = await fetch(`http://127.0.0.1:5000/api/note/${selectedNote.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ title, content: currentContent })
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-
-            const data = await response.json();
-            console.log('Update successful:', data);
-        } catch (error) {
-            console.error('Error updating content:', error);
-        } finally {
-            isLoading = false; // Set loading to false after saving
-        }
-    }
-
     async function deleteNote(selectedNote) {
         if ($selectedNoteId) {
             try {
