@@ -1,5 +1,6 @@
 <script>
     import { writable } from 'svelte/store';
+    import { invalidateAll } from '$app/navigation';
 
     import Tiptap from '$lib/Tiptap.svelte'
     import { BellRing } from 'lucide-svelte';
@@ -175,29 +176,34 @@
     }
 
     async function handleContentUpdate(event) {
-        currentContent = event.detail.content
+        currentContent = event.detail.content;
+        isLoading = true;
 
-        isLoading = true
-
-        // Clear the existing timeout if it exists
         if (saveTimeout) {
             clearTimeout(saveTimeout);
         }
 
-         // Set a new timeout to save content after the defined interval
         saveTimeout = setTimeout(async () => {
-        await saveContent();
+            const formData = new FormData();
+            formData.append('id', $selectedNoteId);
+            formData.append('content', currentContent);
+            formData.append('title', 'Shopping List');
 
-        // Update the content in the mails store
-        mails.update(currentMails => {
-            return currentMails.map(mail => {
-                if (mail.id === $selectedNoteId) {
-                    return { ...mail, content: currentContent }; // Update the content
-                }
-                return mail; // Return the unchanged mail
-            });
-        });
-    }, saveInterval);
+            try {
+                const response = await fetch('?/update', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) throw new Error('Failed to save');
+                
+                await invalidateAll(); // Refresh the page data
+            } catch (error) {
+                console.error('Error saving:', error);
+            } finally {
+                isLoading = false;
+            }
+        }, saveInterval);
     }
 
     async function saveContent() {
