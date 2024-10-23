@@ -1,9 +1,10 @@
 import { error } from '@sveltejs/kit';
+import { API_BASE_URL } from '$env/static/private';
 
 /** @type {import('./$types').PageServerLoad} */
 export const load = async ({ fetch }) => {
     try {
-        const response = await fetch('http://127.0.0.1:5000/api/notes');
+        const response = await fetch(`${API_BASE_URL}/notes`);
         if (!response.ok) throw new Error('Failed to fetch notes');
 
         const notes = await response.json();
