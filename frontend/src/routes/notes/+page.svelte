@@ -1,5 +1,4 @@
 <script>
-    import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
 
     import Tiptap from '$lib/Tiptap.svelte'
@@ -20,9 +19,9 @@
     import { Trash2 } from 'lucide-svelte';
     import { NotebookPen } from 'lucide-svelte';
 
-    onMount(async () => {
-        getNotes()
-    });   
+    export let data;
+    let mails = writable(data.notes)
+    $: mails.set(data.notes); 
 
     let toastVisible = false;
     let toastMessage = '';
@@ -46,7 +45,7 @@
     //     }
     // }
 
-    let mails = writable([])
+    // let mails = writable([])
     let loading = true;
     let error = null;
 
@@ -159,22 +158,6 @@
             // Update your notes or display results as needed
         } catch (error) {
             console.error('Error fetching search results:', error);
-        }
-    }
-
-    async function getNotes()
-    {
-        try {
-            const response = await fetch('http://127.0.0.1:5000/api/notes');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const notes = await response.json();
-            mails.set(notes)
-            } catch (e) {
-            error = e.message;
-            } finally {
-            loading = false;
         }
     }
 
