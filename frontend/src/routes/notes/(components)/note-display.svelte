@@ -52,9 +52,6 @@
             });
             
             if (!response.ok) throw new Error('Delete failed');
-            
-            // showToast('Note deleted successfully!');
-            // selectedNoteId.set(null);
             dispatch('onDelete', {note: note});
             await invalidateAll();
         } catch (error) {
