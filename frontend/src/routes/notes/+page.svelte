@@ -1,28 +1,24 @@
 <script>
-    import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
+    import { invalidateAll } from '$app/navigation';
 
-    import Tiptap from '$lib/Tiptap.svelte'
-    import { BellRing } from 'lucide-svelte';
-    import Reload from "svelte-radix/Reload.svelte";
-    import { BellPlus } from 'lucide-svelte';
+    import NoteDisplay from './(components)/note-display.svelte';
+    import NoteList from './(components)/note-list.svelte';
+
     import { Search } from 'lucide-svelte';
     import { X } from 'lucide-svelte';
     import { Input } from "$lib/components/ui/input";
     import Toast from "$lib/components/ui/Toast.svelte"
-    import { DateInput } from 'date-picker-svelte'
     import * as Resizable from "$lib/components/ui/resizable";
     import { Separator } from "$lib/components/ui/separator";
     import * as Tabs from "$lib/components/ui/tabs";
     import { ScrollArea } from "$lib/components/ui/scroll-area/index.js";
-    import { Badge } from "$lib/components/ui/badge";
     import { Button } from "$lib/components/ui/button";
-    import { Trash2 } from 'lucide-svelte';
     import { NotebookPen } from 'lucide-svelte';
 
-    onMount(async () => {
-        getNotes()
-    });   
+    export let data;
+    let mails = writable(data.notes)
+    $: mails.set(data.notes); 
 
     let toastVisible = false;
     let toastMessage = '';
@@ -36,17 +32,6 @@
     let reminderDateTime = new Date();
     let minDateTime = new Date();
 
-    // Reactive statement to update reminderDateTime based on selectedNote
-    // $: {
-    //     if (selectedNote && selectedNote.reminder && selectedNote.reminder.reminder_time) {
-    //         console.log('Yo note ko reminder cha')
-    //         reminderDateTime = new Date(selectedNote.reminder.reminder_time);
-    //     } else {
-    //         reminderDateTime = new Date();
-    //     }
-    // }
-
-    let mails = writable([])
     let loading = true;
     let error = null;
 
@@ -63,13 +48,13 @@
     let debounceTimeout;
 
      // Reactive statement to update remind_mail based on selectedNote
-     $: {
-        if (selectedNote && selectedNote.reminder && selectedNote.reminder.email) {
-            remind_mail.set(selectedNote.reminder.email);
-        } else {
-            remind_mail.set(''); // or set to null if you prefer
-        }
-    }
+    //  $: {
+    //     if (selectedNote && selectedNote.reminder && selectedNote.reminder.email) {
+    //         remind_mail.set(selectedNote.reminder.email);
+    //     } else {
+    //         remind_mail.set(''); // or set to null if you prefer
+    //     }
+    // }
 
      // Reactive statement to call the search API when the search query changes
      $: searchQueryValue = $searchQuery;
@@ -86,64 +71,7 @@
     }
 
       // Function to format the date in local format and calculate time difference
-      function formatDate(updatedOn) {
-        const updatedDate = new Date(updatedOn);
-        const now = new Date();
-        const timeDiff = now - updatedDate; // Time difference in milliseconds
-
-        // Format the date to local string
-        const localDateString = updatedDate.toLocaleString();
-
-        // Calculate time difference in a readable format
-        const seconds = Math.floor(timeDiff / 1000);
-        const minutes = Math.floor(seconds / 60);
-        const hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-
-        let timeDifference;
-
-        if (days > 0) {
-            timeDifference = `${days} day${days > 1 ? 's' : ''} ago`;
-        } else if (hours > 0) {
-            timeDifference = `${hours} hour${hours > 1 ? 's' : ''} ago`;
-        } else if (minutes > 0) {
-            timeDifference = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-        } else {
-            timeDifference = `${seconds} second${seconds > 1 ? 's' : ''} ago`;
-        }
-
-        // return { localDateString, timeDifference };
-        return timeDifference
-    }
-
-    function formatReminderDate(reminderTime) {
-    const reminderDate = new Date(reminderTime);
-    const now = new Date();
-    const timeDiff = reminderDate - now; // Time difference in milliseconds
-
-    // Format the date to local string
-    const localDateString = reminderDate.toLocaleString();
-
-    // Calculate time difference in a readable format
-    const seconds = Math.floor(timeDiff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    let timeDifference;
-
-    if (days > 0) {
-        timeDifference = `${days} day${days > 1 ? 's' : ''} from now`;
-    } else if (hours > 0) {
-        timeDifference = `${hours} hour${hours > 1 ? 's' : ''} from now`;
-    } else if (minutes > 0) {
-        timeDifference = `${minutes} minute${minutes > 1 ? 's' : ''} from now`;
-    } else {
-        timeDifference = `${seconds} second${seconds > 1 ? 's' : ''} from now`;
-    }
-
-    return timeDifference;
-}
+ 
 
     // Function to call the search API
     async function searchAPI(query) {      
@@ -162,22 +90,6 @@
         }
     }
 
-    async function getNotes()
-    {
-        try {
-            const response = await fetch('http://127.0.0.1:5000/api/notes');
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const notes = await response.json();
-            mails.set(notes)
-            } catch (e) {
-            error = e.message;
-            } finally {
-            loading = false;
-        }
-    }
-
     export let defaultLayout = [265, 440, 655];
 	export let defaultCollapsed = false;
 
@@ -192,77 +104,55 @@
     }
 
     async function handleContentUpdate(event) {
-        currentContent = event.detail.content
+        currentContent = event.detail.content;
+        isLoading = true;
 
-        isLoading = true
-
-        // Clear the existing timeout if it exists
         if (saveTimeout) {
             clearTimeout(saveTimeout);
         }
 
-         // Set a new timeout to save content after the defined interval
         saveTimeout = setTimeout(async () => {
-        await saveContent();
+            const formData = new FormData();
+            formData.append('id', $selectedNoteId);
+            formData.append('content', currentContent);
+            formData.append('title', 'Shopping List');
 
-        // Update the content in the mails store
-        mails.update(currentMails => {
-            return currentMails.map(mail => {
-                if (mail.id === $selectedNoteId) {
-                    return { ...mail, content: currentContent }; // Update the content
-                }
-                return mail; // Return the unchanged mail
-            });
-        });
-    }, saveInterval);
-    }
-
-    async function saveContent() {
-        const title = "Shopping List"
-		try {
-            const response = await fetch(`http://127.0.0.1:5000/api/note/${selectedNote.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ title, content: currentContent })
-            });
-
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            try {
+                const response = await fetch('?/update', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) throw new Error('Failed to save');
+                
+                await invalidateAll(); // Refresh the page data
+            } catch (error) {
+                console.error('Error saving:', error);
+            } finally {
+                isLoading = false;
             }
-
-            const data = await response.json();
-            console.log('Update successful:', data);
-        } catch (error) {
-            console.error('Error updating content:', error);
-        } finally {
-            isLoading = false; // Set loading to false after saving
-        }
+        }, saveInterval);
     }
 
     async function deleteNote(selectedNote) {
         if ($selectedNoteId) {
+            const formData = new FormData();
+            formData.append('id', $selectedNoteId);
+
             try {
-                const response = await fetch(`http://127.0.0.1:5000/api/note/${$selectedNoteId}`, {
-                    method: 'DELETE',
+                const response = await fetch('?/delete', {
+                    method: 'POST',
+                    body: formData
                 });
+                
+                if (!response.ok) throw new Error('Delete failed');
+                
+                showToast('Note deleted successfully!');
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                console.log('Delete successful:', data);
-
-                 // Show toast on successful deletion
-                 showToast('Note deleted successfully!');
-
-                 // Remove the deleted note from the mails store
-                mails.update(currentMails => currentMails.filter(mail => mail.id !== $selectedNoteId));
-                selectedNoteId.set(null); // Clear the selected note
+                selectedNoteId.set(null);
+                await invalidateAll();
             } catch (error) {
-                console.error('Error deleting note:', error);
+                console.error('Error deleting:', error);
             }
         }
     }
@@ -270,65 +160,29 @@
     // Reactive variable to get the selected note object
     $: selectedNote = $mails.find(mail => mail.id === $selectedNoteId);
 
-    // Reactive statement to call the API when the date changes
-    // $: {
-    //     updateDateAPI(reminderDateTime);
+    // async function updateDateAPI() {
+    //     if (selectedNote) {
+    //         const formData = new FormData();
+    //         formData.append('noteId', selectedNote.id);
+    //         formData.append('email', $remind_mail);
+    //         formData.append('reminderTime', reminderDateTime.toISOString());
+    //         formData.append('message', 'Random email body.');
+
+    //         try {
+    //             const response = await fetch('?/updateReminder', {
+    //                 method: 'POST',
+    //                 body: formData
+    //             });
+                
+    //             if (!response.ok) throw new Error('Failed to update reminder');
+                
+    //             showToast('Reminder set successfully!');
+    //             await invalidateAll();
+    //         } catch (error) {
+    //             console.error('Error updating reminder:', error);
+    //         }
+    //     }
     // }
-
-    async function updateDateAPI(newDate) {
-        if (selectedNote) {
-            console.log('Reminder changed')
-
-            const email = $remind_mail
-            const message = "Random email body."
-            const reminder_time = reminderDateTime.toISOString()
-            const note_id = selectedNote.id
-
-            try {
-                const response = await fetch(`http://127.0.0.1:5000/api/reminder/${note_id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, message, reminder_time }),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to update date');
-                }
-
-                showToast('Reminder set successfully!');
-
-                const result = await response.json();
-                console.log('Date updated successfully:', result);
-
-                  // Update the selectedNote with the new reminder data
-            const newReminder = {
-                email: result.email,
-                id: result.id,
-                message: result.message,
-                reminder_time: result.reminder_time,
-                reminder_time_readable: result.reminder_time_readable,
-            };
-
-            // Update the selectedNote
-            selectedNote.reminder = newReminder;
-
-            // Update the mails store to reflect this change
-            mails.update(currentMails => {
-                return currentMails.map(mail => {
-                    if (mail.id === selectedNote.id) {
-                        return { ...mail, reminder: newReminder }; // Update the reminder
-                    }
-                    return mail; // Return the unchanged mail
-                });
-            });
-            } catch (error) {
-                console.error('Error updating date:', error);
-            }
-        }     
-
-    }
 </script>
 
 <Toast message={toastMessage} visible={toastVisible} />
@@ -387,36 +241,7 @@
                     <!-- Notes List Start -->
 
                     <ScrollArea class="h-screen">
-                        <div class="flex flex-col gap-2 p-4 pt-0">
-                            {#each $mails as item}
-                                <button 
-                                class={`hover:bg-accent flex flex-col items-start gap-2 rounded-lg border p-3 text-left text-sm transition-all ${$selectedNoteId === item.id ? 'bg-muted' : ''}`} 
-                                on:click={() => selectMail(item.id) }>
-                                    <div class="flex w-full flex-col gap-1">
-                                        <div class="flex items-center">
-                                            <div class="flex items-center gap-2">
-                                            </div>
-
-                                            <div class="ml-auto text-xs text-foreground">
-                                                { formatDate(item.updated_on) }
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="text-muted-foreground line-clamp-2 text-xs">
-                                        {item.content.substring(0, 300)}
-                                    </div>
-                                    {#if item.reminder}
-                                        <div class="flex items-center gap-2">
-                                            <Badge>
-                                                <BellRing class="mr-2 h-4 w-4" />
-                                                 Remind me:  
-                                                 { formatReminderDate(item.reminder.reminder_time) }
-                                                </Badge>
-                                        </div>
-                                    {/if }
-                                </button>
-                            {/each}
-                        </div>
+                        <NoteList {mails} {selectedNoteId} {selectMail} />
                     </ScrollArea>
 				</Tabs.Content>
 			</Tabs.Root>
@@ -425,64 +250,14 @@
         <!--Display note component seperate from here -->
 		<Resizable.Handle withHandle />
 		<Resizable.Pane defaultSize={defaultLayout[2]}>
-            <div class="flex h-full flex-col">
-                {#if selectedNote}
-                    <div class="mb-1 flex items-center p-2">
-                        <div class="flex items-center gap-2">
-                            Mail to:
-                            <Input
-                                type="email"
-                                placeholder="Email address"
-                                class="pl-8"
-                                bind:value={$remind_mail} 
-                            />
-                            @
-                            <DateInput 
-                                bind:value={reminderDateTime}
-                                timePrecision="minute"      
-                                min={minDateTime}  
-                                placeholder="Pick a future datetime"                    
-                            />                            
-                            <Button variant="outline"  on:click={() => updateDateAPI() }>
-                                <BellPlus class="mr-2 h-4 w-4" />
-                              </Button>
-                            <Separator orientation="vertical" class="mx-1 h-6" />
-                        </div>
-                        <div class="ml-auto flex items-center gap-2">
-                            {#if isLoading}
-                                <Reload class="mr-2 h-4 w-4 animate-spin" />
-                            {/if}
-
-                            <Button 
-                            class="ml-auto"
-                            variant="destructive"
-                            on:click={deleteNote}>
-                                <Trash2 class="mr-2 h-4 w-4"/>
-                            </Button>
-
-                        </div>
-                        <Separator orientation="vertical" class="mx-2 h-6" />
-                    </div>
-                {/if}
-                <Separator />
-                {#if selectedNote}
-                    <div class="flex h-full flex-1 flex-col overflow-hidden">
-                        <div class="flex items-start p-4">
-                            <div class="text-muted-foreground ml-auto text-xs">
-                                Updated: 
-                                { formatDate(selectedNote.updated_on) }
-                            </div>
-                        </div>
-
-                        <div class="flex-1 overflow-y-auto whitespace-pre-wrap p-4 text-sm">
-                            <Tiptap content={selectedNote.content} on:contentUpdated={handleContentUpdate} />
-                        </div>
-                        <Separator class="mt-auto" />
-                    </div>
-                {:else}
-                    <div class="text-muted-foreground p-8 text-center">No note has been selected.</div>
-                {/if}
-            </div>
+                <NoteDisplay 
+                    note={selectedNote}
+                    reminderDateTime={reminderDateTime}
+                    remind_mail={$remind_mail}
+                    isLoading={isLoading}
+                    deleteNote={deleteNote}
+                    handleContentUpdate={handleContentUpdate}
+                />
 		</Resizable.Pane>
 	</Resizable.PaneGroup>
 </div>
