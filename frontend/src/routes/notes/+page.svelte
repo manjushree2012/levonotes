@@ -208,26 +208,23 @@
 
     async function deleteNote(selectedNote) {
         if ($selectedNoteId) {
+            const formData = new FormData();
+            formData.append('id', $selectedNoteId);
+
             try {
-                const response = await fetch(`http://127.0.0.1:5000/api/note/${$selectedNoteId}`, {
-                    method: 'DELETE',
+                const response = await fetch('?/delete', {
+                    method: 'POST',
+                    body: formData
                 });
-
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                const data = await response.json();
-                console.log('Delete successful:', data);
-
-                 // Show toast on successful deletion
-                 showToast('Note deleted successfully!');
-
-                 // Remove the deleted note from the mails store
-                mails.update(currentMails => currentMails.filter(mail => mail.id !== $selectedNoteId));
-                selectedNoteId.set(null); // Clear the selected note
+                
+                if (!response.ok) throw new Error('Delete failed');
+                
+                showToast('Note deleted successfully!');
+                
+                selectedNoteId.set(null);
+                await invalidateAll();
             } catch (error) {
-                console.error('Error deleting note:', error);
+                console.error('Error deleting:', error);
             }
         }
     }

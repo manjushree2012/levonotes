@@ -37,4 +37,20 @@ export const actions = {
             return { success: false, error: e.message };
         }
     },
+
+    delete: async ({ request }) => {
+        const data = await request.formData();
+        const id = data.get('id');
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/note/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) throw new Error('Failed to delete note');
+            return { success: true };
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    },
 }
