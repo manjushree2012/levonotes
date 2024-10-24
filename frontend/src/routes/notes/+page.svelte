@@ -47,15 +47,6 @@
     let remind_mail = writable('')
     let debounceTimeout;
 
-     // Reactive statement to update remind_mail based on selectedNote
-    //  $: {
-    //     if (selectedNote && selectedNote.reminder && selectedNote.reminder.email) {
-    //         remind_mail.set(selectedNote.reminder.email);
-    //     } else {
-    //         remind_mail.set(''); // or set to null if you prefer
-    //     }
-    // }
-
      // Reactive statement to call the search API when the search query changes
      $: searchQueryValue = $searchQuery;
 
@@ -68,10 +59,7 @@
                 searchAPI(searchQueryValue);
             }, 1000); // 1 second of debounce time
         }
-    }
-
-      // Function to format the date in local format and calculate time difference
- 
+    } 
 
     // Function to call the search API
     async function searchAPI(query) {      
@@ -157,32 +145,8 @@
         }
     }
 
-    // Reactive variable to get the selected note object
     $: selectedNote = $mails.find(mail => mail.id === $selectedNoteId);
 
-    // async function updateDateAPI() {
-    //     if (selectedNote) {
-    //         const formData = new FormData();
-    //         formData.append('noteId', selectedNote.id);
-    //         formData.append('email', $remind_mail);
-    //         formData.append('reminderTime', reminderDateTime.toISOString());
-    //         formData.append('message', 'Random email body.');
-
-    //         try {
-    //             const response = await fetch('?/updateReminder', {
-    //                 method: 'POST',
-    //                 body: formData
-    //             });
-                
-    //             if (!response.ok) throw new Error('Failed to update reminder');
-                
-    //             showToast('Reminder set successfully!');
-    //             await invalidateAll();
-    //         } catch (error) {
-    //             console.error('Error updating reminder:', error);
-    //         }
-    //     }
-    // }
 </script>
 
 <Toast message={toastMessage} visible={toastVisible} />
