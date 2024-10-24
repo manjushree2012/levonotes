@@ -1,4 +1,6 @@
 <script>
+    import { invalidateAll } from '$app/navigation';
+
     import { DateInput } from 'date-picker-svelte';
     import { Input } from "$lib/components/ui/input";
     import { Button } from "$lib/components/ui/button";
@@ -12,9 +14,30 @@
     export let reminderDateTime;
     export let remind_mail;
     export let isLoading;
-    export let updateDateAPI;
     export let deleteNote;
     export let handleContentUpdate;
+
+    async function updateDateAPI() {
+            const formData = new FormData();
+            formData.append('noteId', selectedNote.id);
+            formData.append('email', remind_mail);
+            formData.append('reminderTime', reminderDateTime.toISOString());
+            formData.append('message', 'Random email body.');
+
+            try {
+                const response = await fetch('?/updateReminder', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) throw new Error('Failed to update reminder');
+                
+                // showToast('Reminder set successfully!');
+                await invalidateAll();
+            } catch (error) {
+                console.error('Error updating reminder:', error);
+            }
+    }
 </script>
 
 <div class="flex h-full flex-col">

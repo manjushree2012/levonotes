@@ -48,13 +48,13 @@
     let debounceTimeout;
 
      // Reactive statement to update remind_mail based on selectedNote
-     $: {
-        if (selectedNote && selectedNote.reminder && selectedNote.reminder.email) {
-            remind_mail.set(selectedNote.reminder.email);
-        } else {
-            remind_mail.set(''); // or set to null if you prefer
-        }
-    }
+    //  $: {
+    //     if (selectedNote && selectedNote.reminder && selectedNote.reminder.email) {
+    //         remind_mail.set(selectedNote.reminder.email);
+    //     } else {
+    //         remind_mail.set(''); // or set to null if you prefer
+    //     }
+    // }
 
      // Reactive statement to call the search API when the search query changes
      $: searchQueryValue = $searchQuery;
@@ -160,29 +160,29 @@
     // Reactive variable to get the selected note object
     $: selectedNote = $mails.find(mail => mail.id === $selectedNoteId);
 
-    async function updateDateAPI() {
-        if (selectedNote) {
-            const formData = new FormData();
-            formData.append('noteId', selectedNote.id);
-            formData.append('email', $remind_mail);
-            formData.append('reminderTime', reminderDateTime.toISOString());
-            formData.append('message', 'Random email body.');
+    // async function updateDateAPI() {
+    //     if (selectedNote) {
+    //         const formData = new FormData();
+    //         formData.append('noteId', selectedNote.id);
+    //         formData.append('email', $remind_mail);
+    //         formData.append('reminderTime', reminderDateTime.toISOString());
+    //         formData.append('message', 'Random email body.');
 
-            try {
-                const response = await fetch('?/updateReminder', {
-                    method: 'POST',
-                    body: formData
-                });
+    //         try {
+    //             const response = await fetch('?/updateReminder', {
+    //                 method: 'POST',
+    //                 body: formData
+    //             });
                 
-                if (!response.ok) throw new Error('Failed to update reminder');
+    //             if (!response.ok) throw new Error('Failed to update reminder');
                 
-                showToast('Reminder set successfully!');
-                await invalidateAll();
-            } catch (error) {
-                console.error('Error updating reminder:', error);
-            }
-        }
-    }
+    //             showToast('Reminder set successfully!');
+    //             await invalidateAll();
+    //         } catch (error) {
+    //             console.error('Error updating reminder:', error);
+    //         }
+    //     }
+    // }
 </script>
 
 <Toast message={toastMessage} visible={toastVisible} />
@@ -251,11 +251,10 @@
 		<Resizable.Handle withHandle />
 		<Resizable.Pane defaultSize={defaultLayout[2]}>
                 <NoteDisplay 
-                    selectedNote={selectedNote} 
+                    selectedNote={selectedNote}
                     reminderDateTime={reminderDateTime}
                     remind_mail={$remind_mail}
                     isLoading={isLoading}
-                    updateDateAPI={updateDateAPI}
                     deleteNote={deleteNote}
                     handleContentUpdate={handleContentUpdate}
                 />
