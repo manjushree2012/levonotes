@@ -53,4 +53,29 @@ export const actions = {
             return { success: false, error: e.message };
         }
     },
+
+    updateReminder: async ({ request }) => {
+        const data = await request.formData();
+        const noteId = data.get('noteId');
+        const email = data.get('email');
+        const reminderTime = data.get('reminderTime');
+        const message = data.get('message');
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/reminder/${noteId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    email, 
+                    message, 
+                    reminder_time: reminderTime 
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to update reminder.');
+            return { success: true };
+        } catch (e) {
+            return { success: false, error: e.message };
+        }
+    },
 }

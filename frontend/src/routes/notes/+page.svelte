@@ -220,7 +220,7 @@
                 if (!response.ok) throw new Error('Delete failed');
                 
                 showToast('Note deleted successfully!');
-                
+
                 selectedNoteId.set(null);
                 await invalidateAll();
             } catch (error) {
@@ -237,59 +237,83 @@
     //     updateDateAPI(reminderDateTime);
     // }
 
-    async function updateDateAPI(newDate) {
-        if (selectedNote) {
-            console.log('Reminder changed')
+    // async function updateDateAPI(newDate) {
+    //     if (selectedNote) {
+    //         console.log('Reminder changed')
 
-            const email = $remind_mail
-            const message = "Random email body."
-            const reminder_time = reminderDateTime.toISOString()
-            const note_id = selectedNote.id
+    //         const email = $remind_mail
+    //         const message = "Random email body."
+    //         const reminder_time = reminderDateTime.toISOString()
+    //         const note_id = selectedNote.id
+
+    //         try {
+    //             const response = await fetch(`http://127.0.0.1:5000/api/reminder/${note_id}`, {
+    //                 method: 'PUT',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //                 body: JSON.stringify({ email, message, reminder_time }),
+    //             });
+
+    //             if (!response.ok) {
+    //                 throw new Error('Failed to update date');
+    //             }
+
+    //             showToast('Reminder set successfully!');
+
+    //             const result = await response.json();
+    //             console.log('Date updated successfully:', result);
+
+    //               // Update the selectedNote with the new reminder data
+    //         const newReminder = {
+    //             email: result.email,
+    //             id: result.id,
+    //             message: result.message,
+    //             reminder_time: result.reminder_time,
+    //             reminder_time_readable: result.reminder_time_readable,
+    //         };
+
+    //         // Update the selectedNote
+    //         selectedNote.reminder = newReminder;
+
+    //         // Update the mails store to reflect this change
+    //         mails.update(currentMails => {
+    //             return currentMails.map(mail => {
+    //                 if (mail.id === selectedNote.id) {
+    //                     return { ...mail, reminder: newReminder }; // Update the reminder
+    //                 }
+    //                 return mail; // Return the unchanged mail
+    //             });
+    //         });
+    //         } catch (error) {
+    //             console.error('Error updating date:', error);
+    //         }
+    //     }     
+
+    // }
+
+    async function updateDateAPI() {
+        if (selectedNote) {
+            const formData = new FormData();
+            formData.append('noteId', selectedNote.id);
+            formData.append('email', $remind_mail);
+            formData.append('reminderTime', reminderDateTime.toISOString());
+            formData.append('message', 'Random email body.');
 
             try {
-                const response = await fetch(`http://127.0.0.1:5000/api/reminder/${note_id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, message, reminder_time }),
+                const response = await fetch('?/updateReminder', {
+                    method: 'POST',
+                    body: formData
                 });
-
-                if (!response.ok) {
-                    throw new Error('Failed to update date');
-                }
-
+                
+                if (!response.ok) throw new Error('Failed to update reminder');
+                
                 showToast('Reminder set successfully!');
-
-                const result = await response.json();
-                console.log('Date updated successfully:', result);
-
-                  // Update the selectedNote with the new reminder data
-            const newReminder = {
-                email: result.email,
-                id: result.id,
-                message: result.message,
-                reminder_time: result.reminder_time,
-                reminder_time_readable: result.reminder_time_readable,
-            };
-
-            // Update the selectedNote
-            selectedNote.reminder = newReminder;
-
-            // Update the mails store to reflect this change
-            mails.update(currentMails => {
-                return currentMails.map(mail => {
-                    if (mail.id === selectedNote.id) {
-                        return { ...mail, reminder: newReminder }; // Update the reminder
-                    }
-                    return mail; // Return the unchanged mail
-                });
-            });
+                await invalidateAll();
             } catch (error) {
-                console.error('Error updating date:', error);
+                console.error('Error updating reminder:', error);
             }
-        }     
-
+        }
     }
 </script>
 
