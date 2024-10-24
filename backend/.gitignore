@@ -11,3 +11,7 @@ venv/
 ENV/ 
 env.bak/ 
 venv.bak/ 
+
+celery.sqlite
+celerybeat-schedule.dir
+celerybeat-schedule.dat
