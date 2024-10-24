@@ -1,5 +1,6 @@
 <script>
     import { invalidateAll } from '$app/navigation';
+    import { createEventDispatcher } from 'svelte';
 
     import { DateInput } from 'date-picker-svelte';
     import { Input } from "$lib/components/ui/input";
@@ -15,6 +16,8 @@
     export let remind_mail;
     export let isLoading;
     export let handleContentUpdate;
+
+    const dispatch = createEventDispatcher();
 
     async function updateDateAPI() {
             const formData = new FormData();
@@ -52,6 +55,7 @@
             
             // showToast('Note deleted successfully!');
             // selectedNoteId.set(null);
+            dispatch('onDelete', {note: note});
             await invalidateAll();
         } catch (error) {
             console.error('Error deleting:', error);

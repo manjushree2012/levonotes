@@ -122,6 +122,13 @@
         }, saveInterval);
     }
 
+    function handleNoteDelete(event) {
+        const note = event.detail.note
+
+        showToast('Note deleted successfully!');
+        selectedNoteId.set(null);
+    }
+
     $: selectedNote = $mails.find(mail => mail.id === $selectedNoteId);
 
 </script>
@@ -197,6 +204,7 @@
                     remind_mail={$remind_mail}
                     isLoading={isLoading}
                     handleContentUpdate={handleContentUpdate}
+                    on:onDelete={handleNoteDelete}
                 />
 		</Resizable.Pane>
 	</Resizable.PaneGroup>
