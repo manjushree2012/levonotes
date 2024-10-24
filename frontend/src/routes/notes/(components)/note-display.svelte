@@ -14,7 +14,6 @@
     export let reminderDateTime;
     export let remind_mail;
     export let isLoading;
-    export let deleteNote;
     export let handleContentUpdate;
 
     async function updateDateAPI() {
@@ -37,6 +36,26 @@
             } catch (error) {
                 console.error('Error updating reminder:', error);
             }
+    }
+
+    async function deleteNote(selectedNote) {
+        const formData = new FormData();
+        formData.append('id', note.id);
+
+        try {
+            const response = await fetch('?/delete', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (!response.ok) throw new Error('Delete failed');
+            
+            // showToast('Note deleted successfully!');
+            // selectedNoteId.set(null);
+            await invalidateAll();
+        } catch (error) {
+            console.error('Error deleting:', error);
+        }
     }
 </script>
 

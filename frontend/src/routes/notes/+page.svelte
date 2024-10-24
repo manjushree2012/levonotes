@@ -122,29 +122,6 @@
         }, saveInterval);
     }
 
-    async function deleteNote(selectedNote) {
-        if ($selectedNoteId) {
-            const formData = new FormData();
-            formData.append('id', $selectedNoteId);
-
-            try {
-                const response = await fetch('?/delete', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (!response.ok) throw new Error('Delete failed');
-                
-                showToast('Note deleted successfully!');
-
-                selectedNoteId.set(null);
-                await invalidateAll();
-            } catch (error) {
-                console.error('Error deleting:', error);
-            }
-        }
-    }
-
     $: selectedNote = $mails.find(mail => mail.id === $selectedNoteId);
 
 </script>
@@ -219,7 +196,6 @@
                     reminderDateTime={reminderDateTime}
                     remind_mail={$remind_mail}
                     isLoading={isLoading}
-                    deleteNote={deleteNote}
                     handleContentUpdate={handleContentUpdate}
                 />
 		</Resizable.Pane>
