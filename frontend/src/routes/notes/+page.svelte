@@ -251,7 +251,7 @@
 		<Resizable.Handle withHandle />
 		<Resizable.Pane defaultSize={defaultLayout[2]}>
                 <NoteDisplay 
-                    selectedNote={selectedNote}
+                    note={selectedNote}
                     reminderDateTime={reminderDateTime}
                     remind_mail={$remind_mail}
                     isLoading={isLoading}

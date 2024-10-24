@@ -10,7 +10,7 @@
     import { BellPlus } from 'lucide-svelte';
     import { Separator } from "$lib/components/ui/separator";
 
-    export let selectedNote;
+    export let note;
     export let reminderDateTime;
     export let remind_mail;
     export let isLoading;
@@ -19,7 +19,7 @@
 
     async function updateDateAPI() {
             const formData = new FormData();
-            formData.append('noteId', selectedNote.id);
+            formData.append('noteId', note.id);
             formData.append('email', remind_mail);
             formData.append('reminderTime', reminderDateTime.toISOString());
             formData.append('message', 'Random email body.');
@@ -41,7 +41,7 @@
 </script>
 
 <div class="flex h-full flex-col">
-    {#if selectedNote}
+    {#if note}
         <div class="mb-1 flex items-center p-2">
             <div class="flex items-center gap-2">
                 <DateInput 
@@ -75,7 +75,7 @@
         </div>
         <Separator />
         <div class="flex-1 overflow-y-auto whitespace-pre-wrap p-4 text-sm">
-            <Tiptap content={selectedNote.content} on:contentUpdated={handleContentUpdate} />
+            <Tiptap content={note.content} on:contentUpdated={handleContentUpdate} />
         </div>
     {:else}
         <div class="text-muted-foreground p-8 text-center">No note has been selected.</div>
